@@ -36,4 +36,4 @@ Good reminder that good coding starts with reading the specs well.
 
 Wondering if there's a more convoluted but nicer way to solve, than brute-forcing. Something about deconstructing all the opcodes and identifying all params pointing to `0`?
 
-ALso went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alternate `2_2_bis.c` version that could handle arbitrary opcodes.
+Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alternate `2_2_bis.c` version that could handle arbitrary opcodes.
