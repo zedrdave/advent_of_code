@@ -2,10 +2,12 @@
 
 See https://adventofcode.com/2019/about
 
+* To run `.py` code: `python3 ./FILE.py`
+* To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
+
 Personal notes:
 
 ## 1
-
 ### 1.1
 
 Ideal job for Python + `numpy` with vectorisation. Might be a tad more compact in `R`.
