@@ -18,8 +18,14 @@ Can probably be solved using arithmetico-geometric series convergence (though de
 
 ## 2
 
+Definitely better solved in a compiler-friendly language like C, but was too lazy to dust off my raw gcc skills.
+
 ### 2.1
 
 Guess who's got two thumbs and wasted 10 mins by failing to read the last line of instruction and omitting init values… 👈😑🤟
+
 Good reminder that good coding starts with reading the specs well.
 
+### 2.2
+
+Wondering if there's a more convoluted but nicer way to solve, than brute-forcing. Something about deconstructing all the opcodes and identifying all params pointing to `0`?
