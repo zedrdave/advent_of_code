@@ -8,6 +8,8 @@ Personal notes:
 
 ### 1.1
 
+Ideal job for Python + `numpy` with vectorisation. Might be a tad more compact in `R`.
+
 Didn't initially check for negative vals. Turned out there weren't any, but probably not good practice.
 
 ### 1.2
