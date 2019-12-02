@@ -12,7 +12,7 @@ Didn't initially check for negative vals. Turned out there weren't any, but prob
 
 ### 1.2
 
-Simpler version of (the Tyranny of the Rocket Equation)[https://www.nasa.gov/mission_pages/station/expeditions/expedition30/tryanny.html] (minus fuel exhaustion).
+Simpler version of [the Tyranny of the Rocket Equation](https://www.nasa.gov/mission_pages/station/expeditions/expedition30/tryanny.html) (minus fuel exhaustion). I think it even gets a mention in [XKCD's What If](https://what-if.xkcd.com) book version…
 
 Can probably be solved using arithmetico-geometric series convergence (though dealing with the `floor` would be a pain).
 
