@@ -21,6 +21,6 @@ def search(target):
 
 res = search(19690720)
 if res:
-    print(f"{res} -> {res * 100 + res}")
+    print(f"{res} -> {res[0] * 100 + res[1]}")
 
 # 5098658

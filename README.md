@@ -20,11 +20,13 @@ Can probably be solved using arithmetico-geometric series convergence (though de
 
 ## 2
 
-Definitely better solved in a compiler-friendly language like C, but was too lazy to dust off my raw gcc skills.
+Solved it in Python, then dusted off gcc to see if it looked nicer (it doesn't, but I suspect it might, if there start being a richer opcode grammar).
+
+For the sake of it, I added all necessary checks in the C code, but I reckon size could be halved by just relying on correctly formed input.
 
 ### 2.1
 
-Guess who's got two thumbs and wasted 10 mins by failing to read the last line of instruction and omitting init values… 👈😑🤟
+Guess who's got two thumbs and wasted 10 mins by failing to read the last line of instructions… 👈😑🤟
 
 Good reminder that good coding starts with reading the specs well.
 
