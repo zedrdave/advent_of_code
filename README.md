@@ -46,7 +46,7 @@ Went with detecting intersections between two sets of segments (restricted to ve
 
 Thought that foregoing binary-tree sweep search implementation was already total brute-force, then watched [this guy's 5 mins solution](https://www.youtube.com/watch?v=tMPQp60q9GA) and realised how hilariously off-base I was. There is indeed no good reason to deal with continuous-plane segments, rather than using the discrete grid nature of the problem, and exhaustively list all points (wouldn't scale for larger input/grid size, but who cares).
 
-Decidedly not a natural competitive-coder here.
+Decidedly not a natural competitive-coder here. (but still a valuable lesson in the dangers of overthinking and premature optimisation)
 
 ### 3.2
 
