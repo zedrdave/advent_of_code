@@ -46,6 +46,8 @@ Boils down to detecting intersections between two sets of segments (with the hug
 
 Nearly went overboard with a binary-tree sweep search implementation, before deciding that brute-force was more than enough. Which is good, because I would have been screwed for 3.2.
 
+*Note: watching [this guy's 5 mins solution](https://www.youtube.com/watch?v=tMPQp60q9GA) made me realise how hilariously off-base I was, in bothering with even the slightest degree of abstraction, rather than brute-forcing the sets of points. Decidedly not a natural competitive-coder here.*
+
 ### 3.2
 
 Made code clearer, life easier and bugs rarer, by implementing a quick wrapper class `Point(x, y)`: dealing with `p.x`/`p.y` rather than `p[0]`/`p[1]`…
