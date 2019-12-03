@@ -62,6 +62,7 @@ for s1 in ls1:
             intersections += [inter]
             step_counts += [s1_steps + s2_steps + L1Dist(s1[0], inter) + L1Dist(s2[0], inter)]
         s2_steps += L1Dist(*s2)
+        # if step_counts and s1_steps + s2_steps > min(step_counts): continue
     s1_steps += L1Dist(*s1)
 
 print("Intersections: ", intersections)
