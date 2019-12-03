@@ -5,7 +5,7 @@ See https://adventofcode.com/2019/about
 * To run `.py` code: `python3 ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 
-Personal notes:
+OCaml fans: [right this way](https://github.com/regnat/aoc-2019)…
 
 ## 1
 ### 1.1
