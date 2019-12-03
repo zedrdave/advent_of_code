@@ -42,11 +42,11 @@ Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alterna
 
 ### 3.1
 
-Boils down to detecting intersections between two sets of segments (with the huge restriction that segments are only vertical or horizontal).
+Went with detecting intersections between two sets of segments (restricted to vertical or horizontal).
 
-Nearly went overboard with a binary-tree sweep search implementation, before deciding that brute-force was more than enough. Which is good, because I would have been screwed for 3.2.
+Thought that foregoing binary-tree sweep search implementation was already total brute-force, then watched [this guy's 5 mins solution](https://www.youtube.com/watch?v=tMPQp60q9GA) and realised how hilariously off-base I was. There is indeed no good reason to deal with continuous-plane segments, rather than using the discrete grid nature of the problem, and exhaustively list all points (wouldn't scale for larger input/grid size, but who cares).
 
-*Note: watching [this guy's 5 mins solution](https://www.youtube.com/watch?v=tMPQp60q9GA) made me realise how hilariously off-base I was, in bothering with even the slightest degree of abstraction, rather than brute-forcing the sets of points. Decidedly not a natural competitive-coder here.*
+Decidedly not a natural competitive-coder here.
 
 ### 3.2
 
