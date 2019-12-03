@@ -37,3 +37,19 @@ Good reminder that good coding starts with reading the specs well.
 Wondering if there's a more convoluted but nicer way to solve, than brute-forcing. Something about deconstructing all the opcodes and identifying all params pointing to `0`?
 
 Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alternate [2_2_bis.c](https://github.com/zedrdave/advent_of_code_2019/blob/master/2/2_2_bis.c) version that could handle arbitrary opcodes.
+
+## 3
+
+### 3.1
+
+Boils down to detecting intersections between two sets of segments (with the huge restriction that segments are only vertical or horizontal).
+
+Nearly went overboard with a binary-tree sweep search implementation, before deciding that brute-force was more than enough. Which is good, because I would have been screwed for 3.2.
+
+### 3.2
+
+Made code clearer, life easier and bugs rarer, by implementing a quick wrapper class `Point(x, y)`: dealing with `p.x`/`p.y` rather than `p[0]`/`p[1]`…
+
+TIL that `x1 < y < x2` is perfectly good Python, and indeed equivalent to `x1 < y and y < x2` as one would hope/expect (obvious in retrospect).
+
+Can easily optimise by adding: `if step_counts and s1_steps + s2_steps > min(step_counts): continue`, but lose the ability to debug the process.
