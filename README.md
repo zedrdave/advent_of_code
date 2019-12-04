@@ -55,3 +55,15 @@ Made code clearer, life easier and bugs rarer, by implementing a quick wrapper c
 TIL that `x1 < y < x2` is perfectly good Python, and indeed equivalent to `x1 < y and y < x2` as one would hope/expect (obvious in retrospect).
 
 Can easily optimise by adding: `if step_counts and s1_steps + s2_steps > min(step_counts): continue`, but lose the ability to debug the process.
+
+## 4
+
+Very uninspired bruteforcing. Neither concise nor elegant.
+
+Realising that the monotony conditions ensured a only one `d+` pattern match (eg no `113311` or `134156`) greatly simplified the counting problem!
+
+Favourite solution (not mine):
+```
+check = lambda n: list(n) == sorted(n) and 2 in map(n.count, n)
+sum(check(str(n)) for n in range(123456, 654321))
+```
