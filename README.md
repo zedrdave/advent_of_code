@@ -58,9 +58,9 @@ Can easily optimise by adding: `if step_counts and s1_steps + s2_steps > min(ste
 
 ## 4
 
-Very uninspired bruteforcing. Neither concise nor elegant.
+Very uninspired bruteforcing. Neither concise nor elegant, and didn't have the time to revisit with something nicer.
 
-Realising that the monotony conditions ensured a only one `d+` pattern match (eg no `113311` or `134156`) greatly simplified the counting problem!
+Had I realised that the monotony conditions ensured only one `d+` pattern match (eg no `113311` or `134156`) would have greatly simplified the counting problem!
 
 Favourite solution (not mine):
 ```
