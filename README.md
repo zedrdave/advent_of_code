@@ -73,6 +73,7 @@ sum(check(str(n)) for n in range(123456, 654321))
 My [arbitrary condiment version of day 2](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) turned out to be useful after all, and not arbitrary enough. Silly restrictions like:
 * Fixed-sized opcodes
 * Opcodes only able to affect instruction pointer relative to current position
+
 … both made life harder for Day 5.
 
 Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) that now uses a global IP (and memory buffer), allowing ops to do pretty much anything (I'm sure I'll be proven wrong on that at some future date). Initially went hogwild with macros, then chose clarity over concision, and used proper functions.
