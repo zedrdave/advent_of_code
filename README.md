@@ -52,7 +52,7 @@ Decidedly not a natural competitive-coder here. (but still a valuable lesson in 
 
 Made code clearer, life easier and bugs rarer, by implementing a quick wrapper class `Point(x, y)`: dealing with `p.x`/`p.y` rather than `p[0]`/`p[1]`…
 
-TIL that `x1 < y < x2` is perfectly good Python, and indeed equivalent to `x1 < y and y < x2` as one would hope/expect (obvious in retrospect).
+**TIL** that `x1 < y < x2` is perfectly good Python, and indeed equivalent to `x1 < y and y < x2` as one would hope/expect (obvious in retrospect).
 
 Can easily optimise by adding: `if step_counts and s1_steps + s2_steps > min(step_counts): continue`, but lose the ability to debug the process.
 
@@ -67,3 +67,14 @@ Favourite solution (not mine):
 check = lambda n: list(n) == sorted(n) and 2 in map(n.count, n)
 sum(check(str(n)) for n in range(123456, 654321))
 ```
+
+## 5
+
+My [arbitrary condiment version of day 2](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) turned out to be useful after all, and not arbitrary enough. Silly restrictions like:
+* Fixed-sized opcodes
+* Opcodes only able to affect instruction pointer relative to current position
+… both made life harder for Day 5.
+
+Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) that now uses a global IP (and memory buffer), allowing ops to do pretty much anything (I'm sure I'll be proven wrong on that at some future date). Initially went hogwild with macros, then chose clarity over concision, and used proper functions.
+
+**TIL**: C ternary operator is *not* a macro (duh), and therefore: `(a ? b : c) = 1` does not compile (depending on compiler, it might compile to something useless).
