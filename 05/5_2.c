@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
+#include "math.h"
 
 #define MEM_SIZE 10000
 int data[MEM_SIZE+1]; // Oink oink
@@ -7,13 +8,15 @@ int data[MEM_SIZE+1]; // Oink oink
 #define NUM_OPS 100
 void (*ops[NUM_OPS])(void);
 
+// OOOOOOOiiink:
 int IP = 0;
-
-#define POW10(n) (n==1 ? 100 : (n==2 ? 1000 : 10000))
-#define PARAM(n) ((data[IP]/POW10(n))%10 ? data[IP+n] : data[data[IP+n]])
-#define SET_PARAM(n, val) if ((data[IP]/POW10(n))%10) data[IP+n] = val; else data[data[IP+n]] = val;
-
 int input = -1;
+
+int pow10(n) { return (int) pow(10, n) }
+// #define POW10(n) (n==1 ? 100 : (n==2 ? 1000 : 10000))
+#define PARAM(n) ((data[IP]/pow10(n))%10 ? data[IP+n] : data[data[IP+n]])
+#define SET_PARAM(n, val) if ((data[IP]/pow10(n))%10) data[IP+n] = val; else data[data[IP+n]] = val;
+
 
 void op_add(void) {
   SET_PARAM(3, PARAM(1) + PARAM(2));
