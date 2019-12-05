@@ -12,40 +12,46 @@ void (*ops[NUM_OPS])(void);
 int IP = 0;
 int input = -1;
 
-int pow10(n) { return (int) pow(10, n) }
-// #define POW10(n) (n==1 ? 100 : (n==2 ? 1000 : 10000))
-#define PARAM(n) ((data[IP]/pow10(n))%10 ? data[IP+n] : data[data[IP+n]])
-#define SET_PARAM(n, val) if ((data[IP]/pow10(n))%10) data[IP+n] = val; else data[data[IP+n]] = val;
+#define POW10(n) (int) pow(10, n)
 
+int param(n) {
+  return (data[IP]/POW10(n+1))%10 ? data[IP+n] : data[data[IP+n]];
+}
+void set_param(n, val) {
+  if ((data[IP]/POW10(n+1))%10)
+    data[IP+n] = val;
+  else
+    data[data[IP+n]] = val;
+}
 
-void op_add(void) {
-  SET_PARAM(3, PARAM(1) + PARAM(2));
+void op_add() {
+  set_param(3, param(1) + param(2));
   IP += 4;
 }
 void op_mult() {
-  SET_PARAM(3, PARAM(1) * PARAM(2));
+  set_param(3, param(1) * param(2));
   IP += 4;
 }
 void op_input() {
-  SET_PARAM(1, input);
+  set_param(1, input);
   IP += 2;
 }
 void op_output() {
-  printf("%d", PARAM(1));
+  printf("%d", param(1));
   IP += 2;
 }
 void op_jump_if_true() {
-  IP = PARAM(1) ? PARAM(2) : IP+3;
+  IP = param(1) ? param(2) : IP+3;
 }
 void op_jump_if_false() {
-  IP = !PARAM(1) ? PARAM(2) : IP+3;
+  IP = !param(1) ? param(2) : IP+3;
 }
 void op_less_than() {
-  SET_PARAM(3, PARAM(1) < PARAM(2));
+  set_param(3, param(1) < param(2));
   IP += 4;
 }
 void op_equals() {
-  SET_PARAM(3, PARAM(1) == PARAM(2));
+  set_param(3, param(1) == param(2));
   IP += 4;
 }
 
@@ -74,7 +80,8 @@ int main(int argc, char *argv[])
 
   // Execute ops until termination
   for (IP = 0; data[IP] != 99; ops[data[IP] %100]()) {
-    printf("[%d] %d (%d): %d %d %d\n", IP, data[IP], data[IP] %100, data[IP+1], data[IP+2], data[IP+3]);
+    // Debug:
+    // printf("[%d] %d (%d): %d %d %d\n", IP, data[IP], data[IP] %100, data[IP+1], data[IP+2], data[IP+3]);
   }
 
   printf("\n");
