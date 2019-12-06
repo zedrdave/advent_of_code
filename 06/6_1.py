@@ -10,3 +10,5 @@ for p1,p2 in [orbit.strip().split(')') for orbit in orbits]:
     G.add_edge(p2, p1)
 
 sum(map(lambda node: len(nx.descendants(G, node)), G.nodes))
+
+# 122782

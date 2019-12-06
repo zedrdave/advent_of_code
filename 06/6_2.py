@@ -8,3 +8,5 @@ G.add_edges_from(orbit.split(')') for orbit in orbits)
 
 # Treat G as undirected:
 nx.shortest_path_length(nx.Graph(G), 'SAN', 'YOU') - 1
+
+# 271
