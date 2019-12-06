@@ -4,6 +4,7 @@ See https://adventofcode.com/2019/about
 
 * To run `.py` code: `python3 ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
+* to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
 OCaml fans: [right this way](https://github.com/regnat/aoc-2019)…
 
