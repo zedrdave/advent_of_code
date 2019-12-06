@@ -4,6 +4,7 @@ See https://adventofcode.com/2019/about
 
 * To run `.py` code: `python3 ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
+* to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
 OCaml fans: [right this way](https://github.com/regnat/aoc-2019)…
 
@@ -79,3 +80,10 @@ My [arbitrary condiment version of day 2](https://github.com/zedrdave/advent_of_
 Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) that now uses a global IP (and memory buffer), allowing ops to do pretty much anything (I'm sure I'll be proven wrong on that at some future date). Initially went hogwild with macros, then chose clarity over concision, and used proper functions.
 
 **TIL**: C ternary operator is *not* a macro (duh), and therefore: `(a ? b : c) = 1` does not compile (depending on compiler, it might compile to something useless).
+
+
+## 6
+
+Expecting part 2 to be a bit more solid, I went straight to a graph lib, with `networkx`. Code took a couple minutes (after spending 10 mins realising I had not used any graph lib in 2 years, did not remember any, googling around, and figuring out how to use it).
+
+Turns out it works just fine with a [basic node parents dict](https://github.com/zedrdave/advent_of_code_2019/blob/master/06/6_2_b.py). But something tells me more serious graphs will make a comeback.
