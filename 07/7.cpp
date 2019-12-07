@@ -32,7 +32,7 @@ class Machine {
       int output = -1;
 
       while (data[IP] != 99) {
-        // printf("[%d] %d: %d %d %d\n", IP, data[IP], data[IP+1], data[IP+2], data[IP+3]);
+        printf("[%d] %d: %d %d %d\n", IP, data[IP], data[IP+1], data[IP+2], data[IP+3]);
         switch(data[IP] % 100) {
           case 1: // op_add() {
             set_param(3, param(1) + param(2));
@@ -49,7 +49,7 @@ class Machine {
           break;
           case 4: // op_output
             output = param(1);
-            printf("output: %d\n", output);
+            printf("output: %d\n\n", output);
             IP += 2;
             return output;
           break;
@@ -109,8 +109,9 @@ void run_machines(int *phases) {
   int iter = 0;
   int output = 0; // first input
   while(machines[0].is_running()) {
+    printf("\n*** iter: %d ***\n", iter);
     for (int p = 0; p < 5; p++) {
-      // printf("iter: %d | p: %d [%d]\n", iter, p, machines[p].IP);
+      printf("Machine: %d [%d]\n", p, machines[p].IP);
       output = machines[p].run(output);
       max_output = MAX(max_output, output);
     }
@@ -118,6 +119,8 @@ void run_machines(int *phases) {
   }
   printf("max output: %d\n", max_output);
 
+  // DEBUG:
+  // exit(0);
 }
 
 
