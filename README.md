@@ -87,3 +87,15 @@ Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/maste
 Expecting part 2 to be a bit more solid, I went straight to a graph lib, with `networkx`. Code took a couple minutes (after spending 10 mins realising I had not used any graph lib in 2 years, did not remember any, googling around, and figuring out how to use it).
 
 Turns out it works just fine with a [basic node parents dict](https://github.com/zedrdave/advent_of_code_2019/blob/master/06/6_2_b.py). But something tells me more serious graphs will make a comeback.
+
+## 7
+
+"There is no way [using all these global vars](https://github.com/zedrdave/advent_of_code_2019/blob/master/05/5_2.c) could ever come back and bite me in the aaaaaaa…"
+
+Was immediately obvious that my "design choices" (ie laziness) were going to make today's code [hideously painful](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7_2.c).
+
+Once the stars out of the way, I did take the time for a [quick rewrite in C++](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.cpp) (objects, or at least struct, seem self-evident here). Dropped the function pointers (doable, but just didn't feel like spending the time brushing up on C++ method pointers).
+
+And then, for comparison (and also, let's be honest: future use), I did a [quick rewrite in Python](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.py).
+
+Looking at the near-exact identical implementations in C++ and Python, makes me realise why I haven't written a line of C++ in years. [Programming is fun again](https://www.xkcd.com/353/).
