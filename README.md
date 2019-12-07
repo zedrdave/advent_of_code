@@ -90,9 +90,9 @@ Turns out it works just fine with a [basic node parents dict](https://github.com
 
 ## 7
 
-"There is no way [using all these global vars](https://github.com/zedrdave/advent_of_code_2019/blob/master/05/5_2.c) could ever come back and bite me in the aaaaaaa…"
+> "There is no way [using all these global vars](https://github.com/zedrdave/advent_of_code_2019/blob/master/05/5_2.c) could ever come back and bite me in the aaaaaaa…"
 
-Was immediately obvious that my "design choices" (ie laziness) were going to make today's code [hideously painful](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7_2.c).
+Was immediately obvious that my "design choices" (ie laziness) on Day 5 were going to make today's code [hideously painful](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7_2.c).
 
 Once the stars out of the way, I did take the time for a [quick rewrite in C++](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.cpp) (objects, or at least struct, seem self-evident here). Dropped the function pointers (doable, but just didn't feel like spending the time brushing up on C++ method pointers).
 
