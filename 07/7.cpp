@@ -3,7 +3,6 @@
 #include "math.h"
 
 #define MEM_SIZE 10000
-#define NUM_OPS 100
 
 #define NUM_PHASES 5
 
@@ -17,9 +16,7 @@ int max_output = 0;
 class Machine {
   public:
     int data[MEM_SIZE]; // Oink oink
-    void (*ops[NUM_OPS])(void);
     int IP;
-    int output;
 
     Machine(int phase) {
       fseek(fp, 0, SEEK_SET);
