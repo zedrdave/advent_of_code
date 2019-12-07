@@ -85,7 +85,7 @@ void permute(int phases[5], int l, int r)
       for (int p = 0; p < 5; p++) {
         fseek(fp, 0, SEEK_SET);
         for(int i = 0; i < MEM_SIZE && fscanf(fp, "%d,", &data[p][i]) != EOF; i++ );
-        data[p][MEM_SIZE] = 0; // Ensure termination
+        data[p][MEM_SIZE-1] = 0; // Ensure termination
         IP[p] = 0;
       }
       int running = NUM_PHASES;
