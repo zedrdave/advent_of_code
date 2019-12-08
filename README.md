@@ -3,6 +3,7 @@
 See https://adventofcode.com/2019/about
 
 * To run `.py` code: `python3 ./FILE.py`
+* To run `.py` with necessary modules (when a `Pipfile` is present): `pipenv run python ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
