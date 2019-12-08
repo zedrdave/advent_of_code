@@ -3,6 +3,7 @@
 See https://adventofcode.com/2019/about
 
 * To run `.py` code: `python3 ./FILE.py`
+* To run `.py` with necessary modules (when a `Pipfile` is present): `pipenv run python ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
@@ -94,7 +95,7 @@ Turns out it works just fine with a [basic node parents dict](https://github.com
 
 Was immediately obvious that my "design choices" (ie laziness) on Day 5 were going to make today's code [hideously painful](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7_2.c).
 
-Once the stars out of the way, I did take the time for a [quick rewrite in C++](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.cpp) (objects, or at least struct, seem self-evident here). Dropped the function pointers (doable, but just didn't feel like spending the time brushing up on C++ method pointers).
+With the stars out of the way, I did take the time for a [quick rewrite in C++](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.cpp) (objects, or at least struct, seem self-evident here). Dropped the function pointers (doable, but just didn't feel like spending the time brushing up on C++ method pointers).
 
 And then, for comparison (and also, let's be honest: future use), I did a [quick rewrite in Python](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.py).
 
