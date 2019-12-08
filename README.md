@@ -46,7 +46,7 @@ Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alterna
 
 Went with detecting intersections between two sets of segments (restricted to vertical or horizontal).
 
-Thought that foregoing binary-tree sweep search implementation was already total brute-force, then watched [this guy's 5 mins solution](https://www.youtube.com/watch?v=tMPQp60q9GA) and realised how hilariously off-base I was. There is indeed no good reason to deal with continuous-plane segments, rather than using the discrete grid nature of the problem, and exhaustively list all points (wouldn't scale for larger input/grid size, but who cares).
+Thought that foregoing binary-tree sweep search implementation was already total brute-force, then watched [this guy's 5 mins solution](https://www.youtube.com/watch?v=tMPQp60q9GA) and realised how hilariously off-base I was. There is indeed no good reason to deal with continuous-plane segments, rather than using the discrete grid nature of the problem, and exhaustively listing all points (wouldn't scale for larger input/grid size, but who cares).
 
 Decidedly not a natural competitive-coder here. (but still a valuable lesson in the dangers of overthinking and premature optimisation)
 
@@ -100,3 +100,9 @@ With the stars out of the way, I did take the time for a [quick rewrite in C++](
 And then, for comparison (and also, let's be honest: future use), I did a [quick rewrite in Python](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.py).
 
 Looking at the near-exact identical implementations in C++ and Python, makes me realise why I haven't written a line of C++ in years. [Programming is fun again](https://www.xkcd.com/353/).
+
+## 8
+
+A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
+
+… which I decided to turn into a [ridiculously overblown version](https://github.com/zedrdave/advent_of_code_2019/blob/master/08/8_ML.py) version that creates and trains a Keras model to identify each bitmap character and output their text equivalent.
