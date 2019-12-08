@@ -1,6 +1,5 @@
 import numpy as np
 
-# digits = [int(i) for i in"123456789012"]
 digits = [int(i) for i in open('input.txt', 'r').read().strip()]
 
 size = (6,25)
@@ -21,6 +20,4 @@ print("\n".join(''.join(u" ♥️"[int(i)] for i in line) for line in composite)
 
 # Optional: using Pillow
 from PIL import Image
-img_array = ((1-composite)*255).astype('int8')
-img = Image.fromarray(img_array).resize((img_array.shape[1]*10, img_array.shape[0]*10))
-img.show()
+Image.fromarray(composite == 0).resize((250,60)).show()
