@@ -105,4 +105,4 @@ Looking at the near-exact identical implementations in C++ and Python, makes me 
 
 A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
 
-… which I decided to turn into a [ridiculously overblown version](https://github.com/zedrdave/advent_of_code_2019/blob/master/08/8_ML.py) version that creates and trains a Keras model to identify each bitmap character and output their text equivalent.
+… which I decided to turn into a [ridiculously overblown version](https://github.com/zedrdave/advent_of_code_2019/blob/master/08/8_ML.py) that creates and trains a Machine Learning model (with Keras) to identify each bitmap character and output its text equivalent.
