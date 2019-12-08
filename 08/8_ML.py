@@ -6,6 +6,9 @@ VALIDATE = False # Set to True to validate
 VERBOSE = 0 # Model fit verbosity
 EPOCHS = 100
 
+# List of available truetype font files:
+FONTNAMES = ("Arial.ttf",)
+
 
 ################################
 #                              #
@@ -62,11 +65,10 @@ img_rows, img_cols = char_shape
 min_size = max(img_cols, img_rows)
 max_size = min_size + 8
 
-fontnames = ["Arial.ttf"]
 images = []
 labels = []
 blank = Image.new('L', (max_size, max_size), color='black')
-for fontname in fontnames:
+for fontname in FONTNAMES:
     for size in range(min_size, max_size):
         font = ImageFont.truetype(fontname, size)
         for i,char in enumerate(string.ascii_uppercase):
