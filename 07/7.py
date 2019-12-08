@@ -80,8 +80,8 @@ for phases in itertools.permutations([5,6,7,8,9]):
         print(f"\n*** iter {iter} ***")
         for machine in machines:
             in_out = machine.run(in_out)
-            max_output = max(max_output, in_out)
         iter += 1
+    max_output = max(max_output, in_out)
 
     print(f"max output: {max_output}")
 
