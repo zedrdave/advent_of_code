@@ -23,9 +23,3 @@ from PIL import Image
 img_array = ((1-composite)*255).astype('int8')
 img = Image.fromarray(img_array).resize((img_array.shape[1]*10, img_array.shape[0]*10))
 img.show()
-
-
-# Split chars:
-spaces = np.where(np.apply_along_axis(lambda c: all(c == 0), arr=composite, axis=0))[0]
-spaces = np.sort(np.concatenate((spaces, spaces+1)))
-chars = [c for c in np.array_split(composite, spaces, axis=1) if c.shape[1] > 1]
