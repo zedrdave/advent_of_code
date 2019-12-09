@@ -16,7 +16,7 @@ composite = np.apply_along_axis(lambda x: x[np.where(x != 2)[0][0]], axis=0, arr
 
 # ASCII art version:
 print("Part 2:")
-print("\n".join(''.join(u" ♥️"[int(i)] for i in line) for line in composite))
+print("\n".join(''.join([u"⬛️",u"⬜️"][int(i)] for i in line) for line in composite))
 
 # Optional: using Pillow
 from PIL import Image
