@@ -2,12 +2,12 @@
 #           ML params          #
 ################################
 
-VALIDATE = False # Set to True to validate
+VALIDATION_RATIO = 0.1
 VERBOSE = 0 # Model fit verbosity
-EPOCHS = 100
+EPOCHS = 500
 
 # List of available truetype font files:
-FONTNAMES = ("Arial.ttf",)
+FONTNAMES = ("Arial.ttf",) #, "SFNSMono.ttf")
 
 
 ################################
@@ -30,24 +30,19 @@ composite = np.apply_along_axis(lambda x: x[np.where(x != 2)[0][0]], axis=0, arr
 #                                #
 ##################################
 
-import math
+# Turns out there's no need for space detection: all chars are 5x6
+chars = [c for c in np.array_split(composite, 5, axis=1) if c.shape[1] > 1]
+char_shape = chars[0].shape
 
-# find blank vertical lines and split along them:
-vblanks = np.where(np.apply_along_axis(lambda c: all(c == 0), arr=composite, axis=0))[0]
-vblanks = np.sort(np.concatenate((vblanks, vblanks+1)))
-chars = [c for c in np.array_split(composite, vblanks, axis=1) if c.shape[1] > 1]
-
-char_shape = np.array([c.shape for c in chars]).max(0)
-
-###
-# NOTE: This is just in case problems do not produce fixed-sized chars (might be superfluous)
-padded_chars = [np.pad(c, [(math.floor(x),math.ceil(x)) for x in (char_shape - c.shape) / 2]) for c in chars]
-
-# Debug check:
-for c in padded_chars:
-    assert((c.shape == char_shape).all())
-###
-
+# DEBUG: add 'Y' char:
+# chars[1] = np.array([
+# [1,0,0,0,1],
+# [1,0,0,0,1],
+# [0,1,0,1,0],
+# [0,0,1,0,0],
+# [0,0,1,0,0],
+# [0,0,1,0,0]
+# ])
 
 #####################################
 #                                   #
@@ -67,7 +62,7 @@ max_size = min_size + 8
 
 images = []
 labels = []
-blank = Image.new('L', (max_size, max_size), color='black')
+blank = Image.new('L', (max_size*2, max_size*2), color='black')
 for fontname in FONTNAMES:
     for size in range(min_size, max_size):
         font = ImageFont.truetype(fontname, size)
@@ -79,21 +74,19 @@ for fontname in FONTNAMES:
             orig_arr = arr
             for axis in (0,1):
                 x = np.where(np.apply_along_axis(lambda l: l.any(), arr=arr, axis=axis))[0]
-                adj_x = max(0, 4-x[-1]+x[0])//2 # ensure min size
+                adj_x = max(0, 4-x[-1]+x[0])//2 # ensure min size of 4
                 arr = np.take(arr, range(x[0]-adj_x, x[-1]+adj_x+1), axis=1-axis, mode='clip')
-
-            arr = np.array(Image.fromarray(arr.astype('int8')*255).resize((img_cols, img_rows), Image.ANTIALIAS))
-
-            # Slightly hacky way to deal with downsampling:
-            arr = arr > 64
-            # DEBUG:
-            # Image.fromarray(arr).resize((arr.shape[1]*10,arr.shape[0]*10)).show()
-            images += [arr]
-            labels += [i]
+            for r in (0,1):
+                arr = np.array(Image.fromarray(arr.astype('int8')*255).resize((img_cols-r, img_rows), Image.ANTIALIAS))
+                # Slightly hacky way to deal with downsampling:
+                arr = np.pad(arr, ((0,0),(0,r))) > 64
+                # DEBUG:
+                # Image.fromarray(arr).resize((arr.shape[1]*10,arr.shape[0]*10)).show()
+                images += [arr]
+                labels += [i]
 
 images = np.array(images)
 labels = np.array(labels)
-
 
 ################################
 #                              #
@@ -113,10 +106,10 @@ from sklearn.model_selection import train_test_split
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-batch_size = 64
+batch_size = 128
 
-if VALIDATE:
-    x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=0.05, shuffle= True)
+if VALIDATION_RATIO > 0:
+    x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=VALIDATION_RATIO, shuffle= True)
 else:
     x_train, x_test, y_train, y_test = images, images, labels, labels
 
@@ -161,12 +154,13 @@ model.fit(x_train, y_train,
           verbose=VERBOSE,
           validation_data=(x_test, y_test))
 
-if VALIDATE:
+if VALIDATION_RATIO:
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
-    print(' '.join(string.ascii_uppercase[c] for c in model.predict_classes(x_test[0:60])))
-    print(' '.join(string.ascii_uppercase[c] for c in np.where(y_test[0:60])[1]))
+    # Debug:
+    # print(' '.join(string.ascii_uppercase[c] for c in model.predict_classes(x_test[0:60])))
+    # print(' '.join(string.ascii_uppercase[c] for c in np.where(y_test[0:60])[1]))
 
 
 ################################
