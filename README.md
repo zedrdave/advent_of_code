@@ -114,6 +114,6 @@ A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
 
 ## 9
 
-Another nice and easy one. Woke up and started at 6:35am for once (questions open at 6am local time), but still not enough to crack the top 1000.
+Another nice and easy one. Woke up much earlier than usual and started at 6:35am (questions open at 6am local time), but still not enough to crack the top 1000.
 
 With this addition, I believe Intcode can now execute subroutines… I am tempted to rewrite Day 7's permutation optimisation, into one single Intcode program.
