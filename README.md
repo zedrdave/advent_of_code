@@ -87,7 +87,7 @@ Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/maste
 
 Expecting part 2 to be a bit more solid, I went straight to a graph lib, with `networkx`. Code took a couple minutes (after spending 10 mins realising I had not used any graph lib in 2 years, did not remember any, googling around, and figuring out how to use it).
 
-Turns out it works just fine with a [basic node parents dict](https://github.com/zedrdave/advent_of_code_2019/blob/master/06/6_2_b.py). But something tells me more serious graphs will make a comeback.
+Turns out it works just fine with a [basic `dict` of node parents](https://github.com/zedrdave/advent_of_code_2019/blob/master/06/6b.py). But something tells me more serious graphs will make a comeback.
 
 ## 7
 
