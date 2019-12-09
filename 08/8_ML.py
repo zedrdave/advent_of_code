@@ -57,7 +57,7 @@ img_rows, img_cols = char_shape
 
 # Using a few font sizes to simulate variability:
 min_size = max(img_cols, img_rows)
-max_size = min_size + 8
+max_size = min_size + 7
 
 images = []
 labels = []
@@ -75,10 +75,12 @@ for fontname in FONTNAMES:
                 x = np.where(np.apply_along_axis(lambda l: l.any(), arr=arr, axis=axis))[0]
                 adj_x = max(0, 4-x[-1]+x[0])//2 # ensure min size of 4
                 arr = np.take(arr, range(x[0]-adj_x, x[-1]+adj_x+1), axis=1-axis, mode='clip')
+            # jiggle to the right, jiggle to the left
             for r in (0,1):
-                arr = np.array(Image.fromarray(arr.astype('int8')*255).resize((img_cols-r, img_rows), Image.ANTIALIAS))
+                arr = np.array(Image.fromarray(arr.astype('uint8')*255).resize((img_cols-r, img_rows), Image.ANTIALIAS))
+                arr = np.pad(arr, ((0,0),(0,r)))
                 # Slightly hacky way to deal with downsampling:
-                arr = np.pad(arr, ((0,0),(0,r))) > 64
+                arr = arr > 64
                 # DEBUG:
                 # Image.fromarray(arr).resize((arr.shape[1]*10,arr.shape[0]*10)).show()
                 images += [arr]
@@ -123,6 +125,7 @@ x_test = x_test.reshape(x_test.shape[0], *input_shape)
 # print('x_train shape:', x_train.shape)
 # print(x_train.shape[0], 'train samples')
 # print(x_test.shape[0], 'test samples')
+# print(x_train[0])
 
 # convert class vectors to binary class matrices
 num_classes = len(string.ascii_uppercase)
@@ -131,7 +134,7 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 
 # build and train model
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(2, 2),
+model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
 model.add(Conv2D(64, (2, 2), activation='relu'))
