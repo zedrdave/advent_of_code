@@ -106,3 +106,14 @@ Looking at the near-exact identical implementations in C++ and Python, makes me 
 A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
 
 … which I decided to turn into a [ridiculously overblown version](https://github.com/zedrdave/advent_of_code_2019/blob/master/08/8_ML.py) that creates and trains a Machine Learning model (with Keras) to identify each bitmap character and output its text equivalent.
+
+* Its only assumptions, are an input made of 6x5 px uppercase letters (it originally looked for separations, but turns out some chars are touching each other).
+* The code generates its own training set using available fonts. Due to cross-platform limitations, finding any univeersal monospaced fonts was a PITA… I finally gave up and added open-sourced fonts to the package.
+* The training set generation also uses scaled down versions of multiple sizes, to add some variability.
+* Running the code with pipenv (`pipenv run python 8_ML.py`) should automatically install all needed packages before running.
+
+## 9
+
+Another nice and easy one. Woke up and started at 6:35am for once (questions open at 6am local time), but still not enough to crack the top 1000.
+
+With this addition, I believe Intcode can now execute subroutines… I am tempted to rewrite Day 7's permutation optimisation, into one single Intcode program.
