@@ -7,8 +7,7 @@ VERBOSE = 0 # Model fit verbosity
 EPOCHS = 500
 
 # List of available truetype font files:
-FONTNAMES = ("Arial.ttf",) #, "SFNSMono.ttf")
-
+FONTNAMES = ("fonts/Anonymous_Pro.ttf", "fonts/Anonymous_Pro_B.ttf") #, "Arial.ttf", "SFNSMono.ttf")
 
 ################################
 #                              #
