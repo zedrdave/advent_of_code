@@ -1,12 +1,11 @@
 import sys
 import copy
 import itertools
-
-MEM_SIZE = 10000
+import collections
 
 class Machine:
     def __init__(self, program, phase = None):
-        self.mem = [0]*MEM_SIZE
+        self.mem = collections.defaultdict(int)
         for i,d in enumerate(program):
             self.mem[i] = d
         self.RB = 0
