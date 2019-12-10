@@ -1,77 +1,66 @@
 import numpy as np
 import copy
-from math import gcd, atan2, pi
-
+import math
 
 with open('input.txt', 'r') as fp:
     data = np.array([list(line.strip()) for line in fp]) == '#'
 
-# swap from (y,x) to (x,y):
-data = np.swapaxes(data, 0, 1)
+data = np.swapaxes(data, 0, 1) # swap coords from (y,x) to (x,y):
 
-results = np.zeros(data.shape)
+# Part 1
 
-for ast_x in range(data.shape[0]):
-    for ast_y in range(data.shape[1]):
-        if not data[ast_x][ast_y]: continue
+indices = [np.array(a) for a in zip(*np.nonzero(data))]
 
-        all_dirs = set()
-        for (x,y),a in np.ndenumerate(data):
-            if not a: continue
-            dx, dy = ast_x-x, ast_y-y
-            if dx == 0 and dy == 0: continue
-            dx,dy = dx//gcd(dx,dy),dy//gcd(dx,dy)
-            all_dirs.update(((dx,dy),))
+# One-line list comprehension, because why not…
+result = {
+    tuple(ast): len(set([
+        tuple(x//math.gcd(*x))
+        for x in ast-indices
+        if np.count_nonzero(x)
+    ]))
+    for ast in indices
+}
 
-        results[ast_x][ast_y] = len(all_dirs)
+base = max(result.keys(), key=lambda k:result[k])
+print(f"Part 1: {result[base]} at pos: {base}")
 
-best_pos = np.unravel_index(results.argmax(), results.shape)
-print(f"Part 1: {results.max()} at pos: {best_pos}")
+# Part 2
+
+base = np.array(base)
 
 def angle(vector1, vector2):
     x1, y1 = vector1
     x2, y2 = vector2
     dot = x1*x2 + y1*y2
     det = x1*y2 - y1*x2
-    angle = atan2(det, dot)
-    return (2*pi + angle) if angle < 0 else angle
+    angle = math.atan2(det, dot)
+    return (2*math.pi + angle) if angle < 0 else angle
 
 dist = lambda p1,p2: abs(p1[0]-p2[0])+abs(p1[1]-p2[1])
 
-ast_x, ast_y = best_pos
-
-map = copy.deepcopy(data)
-
-# print(ast_x, ast_y)
-# map[ast_x][ast_y] = 8
-# print(map.transpose())
 counter = 1
-
 while(True):
-    # iterate:
-    targets = set()
-    all_dirs = set()
-    for (x,y),a in sorted(np.ndenumerate(map), key=lambda x:dist(x[0],(ast_x,ast_y))):
-        if not a: continue
-        dx, dy = x-ast_x, y-ast_y
-        if dx == 0 and dy == 0: continue
-        # print("\n", x, y, a)
-        # print("d: ", dx, dy)
-        gdx,gdy = dx//gcd(dx,dy),dy//gcd(dx,dy)
-        # print("d(gcd): ", gdx, gdy)
-        if (gdx,gdy) in all_dirs:
-            # print("skipping: ", (dx,dy))
+    targets = {}
+    indices = [np.array(a) for a in zip(*np.nonzero(data))]
+
+    for ast in sorted(indices, key=lambda x:dist(x,base)):
+        dir = ast - base
+        if not np.count_nonzero(dir): continue
+
+        g = math.gcd(*dir)
+        gdir = dir//g
+
+        if tuple(gdir) in targets:
             continue
-        targets.update(((dx,dy),))
-        all_dirs.update(((gdx,gdy),))
+        targets[tuple(gdir)] = ast
 
-    if(len(targets) == 0):
-        break
+    for k in sorted(targets.keys(), key=lambda dir: angle((0,-1), dir)):
+        target = targets[k]
+        # Pew pew!
+        data[target[0]][target[1]] = 0
+        if counter == 200:
+            print(f"Part 2: #{counter} {target} -> {100*(target[0]) + target[1]}")
+        counter += 1
 
-    targets = sorted(targets, key=lambda x: angle((0,-1),x))
-    for i,dir in enumerate(targets):
-        # print(f"#{counter+i} {ast_x+dir[0]},{ast_y+dir[1]}")
-        if counter+i == 200:
-            print(f"Part 2: #{counter+i} {ast_x+dir[0]},{ast_y+dir[1]} -> {100*(ast_x+dir[0]) + ast_y+dir[1]}")
-        map[ast_x+dir[0]][ast_y+dir[1]] = 0
-    counter += len(targets)
+    if len(targets) == 0:
+        break;
