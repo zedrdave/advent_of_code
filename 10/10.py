@@ -47,12 +47,10 @@ while(True):
         dir = ast - base
         if not np.count_nonzero(dir): continue
 
-        g = math.gcd(*dir)
-        gdir = dir//g
-
-        if tuple(gdir) in targets:
+        dir //= math.gcd(*dir)
+        if tuple(dir) in targets:
             continue
-        targets[tuple(gdir)] = ast
+        targets[tuple(dir)] = ast
 
     for k in sorted(targets.keys(), key=lambda dir: angle((0,-1), dir)):
         target = targets[k]
