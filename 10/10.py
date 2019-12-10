@@ -1,44 +1,77 @@
 import numpy as np
 import copy
-from math import gcd
+from math import gcd, atan2, pi
+
 
 with open('input.txt', 'r') as fp:
-    data = (np.array([list(line.strip()) for line in fp]) == '#').astype('int')
+    data = np.array([list(line.strip()) for line in fp]) == '#'
 
-results = copy.deepcopy(data)
+# swap from (y,x) to (x,y):
+data = np.swapaxes(data, 0, 1)
 
-def dist(p1,p2):
-    return abs(p1[0]-p2[0])+abs(p1[1]-p2[1])
+results = np.zeros(data.shape)
 
-for x in range(data.shape[0]):
-    for y in range(data.shape[1]):
-        if not data[x][y]: continue
-        # print("ORIGIN: ", y, x)
-        map = copy.deepcopy(data)
-        map[x][y] = 0
-        for d in range(1, sum(data.shape)):
-            # iterate array:
-            # print("Dist: ", d)
-            for x2 in range(map.shape[0]):
-                for y2 in range(map.shape[1]):
-                    if map[x2][y2] and dist((x,y),(x2,y2)) == d:
-                        # print(y2, x2, ' d:', dist((x,y),(x2,y2)))
-                        dx2, dy2 = (x2-x, y2-y)
-                        dx2, dy2 = (dx2//gcd(dx2,dy2),dy2//gcd(dx2,dy2))
-                        # print("dx,dy", dy2, dx2)
-                        r = 1
-                        while 0 <= x2+r*dx2 < map.shape[0] and 0 <= y2+r*dy2 < map.shape[1]:
-                            if map[x2+r*dx2][y2+r*dy2]:
-                                # print("erasing: ", y2, x2)
-                                map[x2+r*dx2][y2+r*dy2] = 0
-                                # print(map)
-                            r += 1
-        results[x][y] = sum(sum(map))
-        # print(map)
+for ast_x in range(data.shape[0]):
+    for ast_y in range(data.shape[1]):
+        if not data[ast_x][ast_y]: continue
 
-print(results)
+        all_dirs = set()
+        for (x,y),a in np.ndenumerate(data):
+            if not a: continue
+            dx, dy = ast_x-x, ast_y-y
+            if dx == 0 and dy == 0: continue
+            dx,dy = dx//gcd(dx,dy),dy//gcd(dx,dy)
+            all_dirs.update(((dx,dy),))
 
-print(np.unravel_index(results.argmax(), results.shape))
-print(results.max())
+        results[ast_x][ast_y] = len(all_dirs)
 
-# < 330
+best_pos = np.unravel_index(results.argmax(), results.shape)
+print(f"Part 1: {results.max()} at pos: {best_pos}")
+
+def angle(vector1, vector2):
+    x1, y1 = vector1
+    x2, y2 = vector2
+    dot = x1*x2 + y1*y2
+    det = x1*y2 - y1*x2
+    angle = atan2(det, dot)
+    return (2*pi + angle) if angle < 0 else angle
+
+dist = lambda p1,p2: abs(p1[0]-p2[0])+abs(p1[1]-p2[1])
+
+ast_x, ast_y = best_pos
+
+map = copy.deepcopy(data)
+
+# print(ast_x, ast_y)
+# map[ast_x][ast_y] = 8
+# print(map.transpose())
+counter = 1
+
+while(True):
+    # iterate:
+    targets = set()
+    all_dirs = set()
+    for (x,y),a in sorted(np.ndenumerate(map), key=lambda x:dist(x[0],(ast_x,ast_y))):
+        if not a: continue
+        dx, dy = x-ast_x, y-ast_y
+        if dx == 0 and dy == 0: continue
+        # print("\n", x, y, a)
+        # print("d: ", dx, dy)
+        gdx,gdy = dx//gcd(dx,dy),dy//gcd(dx,dy)
+        # print("d(gcd): ", gdx, gdy)
+        if (gdx,gdy) in all_dirs:
+            # print("skipping: ", (dx,dy))
+            continue
+        targets.update(((dx,dy),))
+        all_dirs.update(((gdx,gdy),))
+
+    if(len(targets) == 0):
+        break
+
+    targets = sorted(targets, key=lambda x: angle((0,-1),x))
+    for i,dir in enumerate(targets):
+        # print(f"#{counter+i} {ast_x+dir[0]},{ast_y+dir[1]}")
+        if counter+i == 200:
+            print(f"Part 2: #{counter+i} {ast_x+dir[0]},{ast_y+dir[1]} -> {100*(ast_x+dir[0]) + ast_y+dir[1]}")
+        map[ast_x+dir[0]][ast_y+dir[1]] = 0
+    counter += len(targets)
