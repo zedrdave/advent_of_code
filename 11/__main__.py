@@ -11,26 +11,19 @@ instructions = loadCSVInput(__file__)
 DIRS = np.array([(0,-1),(1,0),(0,1),(-1,0)])
 
 def paint(dir = 0, pos=(0,0), hull=defaultdict(int)):
-
     robot = VM(instructions)
-
     while True:
         try:
             paint_color = next(robot.run(hull[tuple(pos)]))
             turn = next(robot.run())
-
             dprint(f"[{pos}]: {hull[tuple(pos)]} -> {paint_color}")
-
             hull[tuple(pos)] = paint_color
             dir = (dir + [-1,1][turn]) % 4
             pos = tuple(pos + DIRS[dir])
+            dprint(f"New pos: {pos} {'^>v<'[dir]}")
         except StopIteration:
             break
-
-        dprint(f"New pos: {pos} {'^>v<'[dir]}")
-
     print(f"Total white: {sum(hull.values())}\nTotal painted once: {len(hull)}")
-
     return hull
 
 print("Part 1")
@@ -40,8 +33,8 @@ print("Part 2")
 bitmap = paint(hull=defaultdict(int, {(0,0):1}))
 asciiPrint(bitmap, transpose=True)
 
+###################################
 # OPTIONAL:
-
 print("Upping the ante:")
 
 # Segmenting the bitmap (cheating a bit with the cropping):
