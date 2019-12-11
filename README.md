@@ -121,6 +121,12 @@ With this addition, I believe Intcode can now execute subroutines… I am tempte
 
 ## 10
 
+Grid/pathfinder problems are clearly my blind spot (don't encounter many of these in real life work).
+
+First time I had to leave halfway through (after a laborious silver star) to go to work. After a bit of fresh air, some coffee and time to think, it turned out the solution was fairly simple (GCD for the win). Highlight of that day: realising I literally do not remember even the most basic trig, and taking 5 mins to convert negative angles to positive.
+
+## 11
+
 Mostly an opportunity for some code cleanup:
 * Moved Intcode's `VM` to its own module (now requires running with `python3 -m`. See above).
 * Packed a few useful functions into a `utils` module
