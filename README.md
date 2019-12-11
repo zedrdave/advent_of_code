@@ -4,6 +4,7 @@ See https://adventofcode.com/2019/about
 
 * To run `.py` code: `python3 ./FILE.py`
 * To run `.py` with necessary modules (when a `Pipfile` is present): `pipenv run python ./FILE.py`
+* To run `<DAY>/__main__.py` code: `python3 -m advent_of_code_2019.<DAY>` **from the directory above `advent_of_code_2019`** (runs as a module)
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
@@ -117,3 +118,15 @@ A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
 Another nice and easy one. Woke up much earlier than usual and started at 6:35am (questions open at 6am local time), but still not enough to crack the top 1000.
 
 With this addition, I believe Intcode can now execute subroutines… I am tempted to rewrite Day 7's permutation optimisation, into one single Intcode program.
+
+## 10
+
+Mostly an opportunity for some code cleanup:
+* Moved Intcode's `VM` to its own module (now requires running with `python3 -m`. See above).
+* Packed a few useful functions into a `utils` module
+* Created a standalone `utils.OCR` class, with the ML OCR reader from Day 8
+* Turned Intcode `VM`'s main function (`run`) into a generator, that `yield` output values…
+
+And with all these changes, I was able to rewrite my original [very raw solution](https://github.com/zedrdave/advent_of_code_2019/blob/master/11/11.py) into a neat concise bit of code that not only solves the problem rather elegantly, but also uses OCR to predict the text output from the bitmap…
+
+One major change from my initial code: using a sparse matrix, rather than allocating a ridiculously large `numpy.array` and hoping the program would remain within bounds. Turns out I did not even need `scipy.sparse`, as a mere `defaultdict(int)` with tuple keys works beautifully…
