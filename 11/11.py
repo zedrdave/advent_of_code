@@ -29,7 +29,7 @@ class VM:
             self.set_param(1, phase)
             self.IP += 2
 
-    def run(self, input):
+    def run(self, input = None):
         while self.mem[self.IP] != OP.HALT:
             # print(f"[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
 
@@ -47,9 +47,9 @@ class VM:
                 self.IP += 2
             elif cmd == OP.OUTPUT:
                 output = self.param(1)
-                print(f"output: {output}\n")
+                print(f"output: {int(output)}\n")
                 self.IP += 2
-                # return output
+                return int(output)
             elif cmd == OP.JUMP_IF_TRUE:
                 self.IP = self.param(2) if self.param(1) else self.IP+3
             elif cmd == OP.JUMP_IF_FALSE:
@@ -69,7 +69,7 @@ class VM:
                 sys.exit(-1)
 
         # print("[END]\n")
-        return 0
+        return None
 
     @property
     def is_running(self):
@@ -93,3 +93,61 @@ class VM:
             self.mem[self.IP+n] = val
         else:
             self.mem[self.mem[self.IP+n]] = val
+
+with open("input.txt","r") as f:
+    instructions = [int(i.strip()) for i in f.read().split(',')]
+
+
+
+# class fakeVM:
+#     insts = [1,0, 0,0, 1,0, 1,0, 0,1, 1,0, 1,0]
+#     cur_inst = 0
+#
+#     def run(self, input = None):
+#         if self.cur_inst >= len(self.insts):
+#             return None
+#         ret = self.insts[self.cur_inst]
+#         self.cur_inst += 1
+#         print(f"output: {ret}\n")
+#         return ret
+#
+#     @property
+#     def is_running(self):
+#         return self.cur_inst < len(self.insts)
+#
+
+
+import numpy as np
+hull = np.zeros((45,10), 'int')
+pos = [1,1]
+dir = 0
+dirs = ((0,-1),(1,0),(0,1),(-1,0))
+
+# robot = fakeVM()
+
+robot = VM(instructions)
+
+# Part 1
+painted = np.zeros(hull.shape, 'int')
+
+# Part 2:
+hull[pos[0]][pos[1]] = 1
+
+while robot.is_running:
+    print(f"colour at current pos: {hull[pos[0]][pos[1]]}")
+    paint_color = robot.run(hull[pos[0]][pos[1]])
+    if paint_color is None:
+        break
+    hull[pos[0]][pos[1]] = paint_color
+    painted[pos[0]][pos[1]] = 1
+    print(f"Painted {pos[0]},{pos[1]}: {hull[pos[0]][pos[1]]}")
+
+    dir = (dir + [-1,1][robot.run()]) % 4
+    print(f"New dir: {dirs[dir]}")
+    pos[0] += dirs[dir][0]
+    pos[1] += dirs[dir][1]
+    print(f"New pos: {pos}")
+
+print(f"Total white: {np.count_nonzero(hull)}, Total painted once: {np.count_nonzero(painted)}")
+
+print("\n".join(''.join([u"⬛️",u"⬜️"][int(i)] for i in line) for line in hull.transpose()))
