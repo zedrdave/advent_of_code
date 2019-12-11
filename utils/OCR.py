@@ -1,5 +1,6 @@
 import numpy as np
 import string
+import os
 
 class CharPredictor:
     """
@@ -16,9 +17,10 @@ class CharPredictor:
 
     VERBOSITY = 0 # verbosity (2: show model fit progression)
 
-    # List of available truetype font files:
-    # FONTNAMES = ("fonts/Anonymous_Pro.ttf", "fonts/Anonymous_Pro_B.ttf") #, "Arial.ttf", "SFNSMono.ttf")
-    FONTNAMES = ("Arial.ttf", "SFNSMono.ttf")
+    # List of truetype font files:
+    FONTNAMES = [os.path.join(os.path.dirname(__file__), 'fonts', f) for f in ("Anonymous_Pro.ttf", "Anonymous_Pro_B.ttf")]
+    # Optional: only use built-in:
+    # FONTNAMES = ("Arial.ttf", "SFNSMono.ttf")
 
     def __init__(self, char_shape, verbosity = None):
 
