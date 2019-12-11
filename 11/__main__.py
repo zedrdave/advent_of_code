@@ -4,7 +4,8 @@ from ..intcode.VM import VM
 from ..utils import loadCSVInput, dprint, asciiPrint, setVerbosity, sparseToDense
 from ..utils.OCR import CharPredictor
 
-setVerbosity(False)
+# Debug:
+# setVerbosity(True)
 
 instructions = loadCSVInput(__file__)
 
