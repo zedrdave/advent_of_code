@@ -52,7 +52,7 @@ class VM:
                 output = int(self.param(1))
                 dprint(f"output: {output}\n")
                 self.IP += 2
-                return output
+                yield output
             elif cmd == OP.JUMP_IF_TRUE:
                 self.IP = self.param(2) if self.param(1) else self.IP+3
             elif cmd == OP.JUMP_IF_FALSE:
@@ -71,8 +71,8 @@ class VM:
                 dprint(f"Unknown opcode: {self.mem[self.IP]} ")
                 sys.exit(-1)
 
-        # dprint("[END]\n")
-        return None
+        dprint("[HALT]\n")
+        # return None
 
     @property
     def is_running(self):

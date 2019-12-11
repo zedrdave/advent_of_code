@@ -1,43 +1,41 @@
 import numpy as np
-import os
+from collections import defaultdict
 from ..intcode.VM import VM
 from ..utils import loadCSVInput, dprint, asciiPrint, setVerbosity
 
-setVerbosity(True)
+setVerbosity(False)
 
 instructions = loadCSVInput(__file__)
 
-def paint(hull, pos, dir, printOutput = False):
-    dirs = np.array([(0,-1),(1,0),(0,1),(-1,0)])
-    painted = set()
-    pos = tuple(pos)
+DIRS = np.array([(0,-1),(1,0),(0,1),(-1,0)])
+
+def paint(dir = 0, pos=(0,0), hull=defaultdict(int), printOutput = False):
 
     robot = VM(instructions)
-    while robot.is_running:
-        paint_color = robot.run(hull[pos[0]][pos[1]])
-        if paint_color is None:
+
+    while True:
+        try:
+            paint_color = next(robot.run(hull[tuple(pos)]))
+            turn = next(robot.run())
+
+            dprint(f"[{pos}]: {hull[tuple(pos)]} -> {paint_color}")
+
+            hull[tuple(pos)] = paint_color
+            dir = (dir + [-1,1][turn]) % 4
+            pos = tuple(pos + DIRS[dir])
+        except StopIteration:
             break
-            
-        dprint(f"[{pos}]: {hull[pos]} -> {paint_color}")
-        hull[pos] = paint_color
-        painted.update((pos,))
-        dir = (dir + [-1,1][robot.run()]) % 4
-        pos = tuple(pos + dirs[dir])
+
         dprint(f"New pos: {pos} {'^>v<'[dir]}")
 
-    print(f"Total white: {np.count_nonzero(hull)}\nTotal painted once: {len(painted)}")
+    print(f"Total white: {sum(hull.values())}\nTotal painted once: {len(hull)}")
     if printOutput:
-        asciiPrint(hull.transpose())
+        asciiPrint(hull, transpose=True)
+
 
 print("Part 1")
-hull = np.zeros((10000,10000), 'int')
-pos = [5000,5000]
-dir = 0
-paint(hull, pos, dir)
+paint()
+# paint(printOutput=True) # looks kinda cool!
 
 print("Part 2")
-hull = np.zeros((45,10), 'int')
-pos = [1,1]
-hull[pos[0]][pos[1]] = 1
-dir = 0
-paint(hull, pos, dir, printOutput=True)
+paint(hull=defaultdict(int, {(0,0):1}), printOutput=True)
