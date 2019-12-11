@@ -3,6 +3,7 @@ import copy
 import itertools
 import collections
 from enum import IntEnum
+from ..utils import dprint
 
 class OP(IntEnum):
     ADD = 1
@@ -29,9 +30,9 @@ class VM:
             self.set_param(1, phase)
             self.IP += 2
 
-    def run(self, input):
+    def run(self, input = None):
         while self.mem[self.IP] != OP.HALT:
-            # print(f"[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
+            # dprint(f"[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
 
             cmd = self.mem[self.IP] % 100
 
@@ -42,14 +43,16 @@ class VM:
                 self.set_param(3, self.param(1) * self.param(2))
                 self.IP += 4
             elif cmd == OP.INPUT:
-                print(f"using input: {input}")
-                self.set_param(1, input)
+                if input is None:
+                    raise(Exception("Missing input!"))
+                dprint(f"using input: {input}")
+                self.set_param(1, int(input))
                 self.IP += 2
             elif cmd == OP.OUTPUT:
-                output = self.param(1)
-                print(f"output: {output}\n")
+                output = int(self.param(1))
+                dprint(f"output: {output}\n")
                 self.IP += 2
-                # return output
+                return output
             elif cmd == OP.JUMP_IF_TRUE:
                 self.IP = self.param(2) if self.param(1) else self.IP+3
             elif cmd == OP.JUMP_IF_FALSE:
@@ -62,14 +65,14 @@ class VM:
                 self.IP += 4
             elif cmd == OP.INCREMENT_RB:
                 self.RB += self.param(1)
-                # print(f"RB: {self.RB}")
+                # dprint(f"RB: {self.RB}")
                 self.IP += 2
             else: # op_err
-                print(f"Unknown opcode: {self.mem[self.IP]} ")
+                dprint(f"Unknown opcode: {self.mem[self.IP]} ")
                 sys.exit(-1)
 
-        # print("[END]\n")
-        return 0
+        # dprint("[END]\n")
+        return None
 
     @property
     def is_running(self):
