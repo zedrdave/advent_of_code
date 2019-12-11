@@ -3,8 +3,9 @@ from collections import defaultdict
 import numpy as np
 import scipy.sparse
 
-def loadCSVInput(curFile):
-    inputFile = os.path.join(os.path.dirname(os.path.abspath(curFile)), 'input.txt')
+def loadCSVInput():
+    import __main__
+    inputFile = os.path.join(os.path.dirname(os.path.abspath(__main__.__file__)), 'input.txt')
     with open(inputFile) as f:
         data = [int(i.strip()) for i in f.read().split(',')]
     return data

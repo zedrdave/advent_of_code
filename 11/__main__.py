@@ -7,7 +7,7 @@ from ..utils.OCR import CharPredictor
 # Debug:
 # setVerbosity(True)
 
-instructions = loadCSVInput(__file__)
+instructions = loadCSVInput()
 
 DIRS = np.array([(0,-1),(1,0),(0,1),(-1,0)])
 
