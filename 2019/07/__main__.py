@@ -41,7 +41,7 @@ async def stdout(val: int):
     print(f'(output)> {val}')
 
 class VM(VMBase):
-    def __init__(self, program, input = stdin, output = stdout):
+    def __init__(self, program, label = 'VM', input = stdin, output = stdout):
         self.mem = collections.defaultdict(int)
         for i,d in enumerate(program):
             self.mem[i] = d
@@ -49,13 +49,14 @@ class VM(VMBase):
         self.IP = 0
         self.input = input
         self.output = output
+        self.label = label
         # if phase:
         #     self.set_param(1, phase)
         #     self.IP += 2
 
     async def run(self):
         while self.mem[self.IP] != OP.HALT:
-            dprint(f"[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
+            dprint(f"{self.label}[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
 
             cmd = self.mem[self.IP] % 100
 
@@ -71,7 +72,7 @@ class VM(VMBase):
                     break
                 else:
                     raise(Exception("Missing input!"))
-                dprint(f"using input: {input}")
+                dprint(f"{self.label} using input: {input}")
                 self.set_param(1, int(input))
                 self.IP += 2
             elif cmd == OP.OUTPUT:
@@ -96,7 +97,7 @@ class VM(VMBase):
                 dprint(f"Unknown opcode: {self.mem[self.IP]} ")
                 sys.exit(-1)
 
-        dprint("[HALT]\n")
+        dprint("{self.label} [HALT]\n")
         # return None
 
 
@@ -110,12 +111,14 @@ class Pipe:
 
     async def input(self, val):
         async with self.cond:
+            print("*** inputting ***")
             self.buffer.append(val)
             self.cond.notify_all()
 
     async def output(self):
         while True:
             async with self.cond:
+                print("*** outputting ***")
                 while len(self.buffer) == 0:
                     await self.cond.wait()
                 yield self.buffer.popleft()
@@ -126,25 +129,43 @@ class Pipe:
 # async def prompt(pipe):
 #     await pipe.push(stdin())
 
-def junction(inputs):
-    async def _input(val):
-        for i in inputs:
-            await i.input(val)
-    return _input
+def join(*pipeIOs):
+    async def _joined(val):
+        for p in pipeIOs:
+            print('joined')
+            await p(val)
+    return _joined
+
+def constInput(i):
+    async def _f():
+        while True:
+            yield i
+    return _f
 
 async def main():
-    pipe = Pipe()
-    pipe2 = Pipe()
-    # with concurrent.futures.ThreadPoolExecutor() as pool:
-    # val = await asyncio.get_event_loop().run_in_executor(None, prompt, pipe)
-    # print("...")
-    j = junction([pipe,pipe2])
-    vm1 = VM(instructions, input=stdin, output=j).run()
-    vm2 = VM(instructions, input=pipe.output, output=pipe2.input).run()
-    await asyncio.gather(vm1, vm2)
-    print(pipe2.flush())
 
-    # instructions = loadCSVInput()
+    # vm1 = VM(instructions, input=stdin, output=join(pipe1.input, pipe2.input, stdout)).run()
+    # vm2 = VM(instructions, input=pipe1.output, output=join(pipe2.input, stdout)).run()
+    # await asyncio.gather(vm1, vm2)
+    # print(pipe2.flush())
+    #
+    # Phases:  (7, 5, 6, 8, 9)
+    # using input: 0
+    # output: 2
+    #
+    # output:  2
+    # using input: 2
+    # output: 4
+    #
+    # output:  4
+    # using input: 4
+    # output: 8
+
+    instructions = loadCSVInput()
+    pipe = Pipe([5])
+    vm = VM(instructions, label="M1", output=pipe.input).run()
+    vm2 = VM(instructions, label="M2", input=pipe.output).run()
+    await asyncio.gather(vm2, vm)
     # max_output = 0
     # for phases in itertools.permutations([5,6,7,8,9]):
     #     dprint("Phases: ", phases)
