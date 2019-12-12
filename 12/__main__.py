@@ -2,62 +2,59 @@ import numpy as np
 import itertools
 import os
 import math
-# from collections import defaultdict
-# from ..intcode.VM import VM
-from ..utils import loadCSVInput, dprint, asciiPrint, setVerbosity
+from ..utils import loadXYZInput, dprint, setVerbosity
 
 # Debug:
 setVerbosity(True)
 
-# data = loadCSVInput()
-inputFile = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input.txt')
-with open(inputFile) as f:
-    data = [line.strip()[1:-1] for line in f]
+data = loadXYZInput()
 
-positions = np.array([[int(pos[2:]) for pos in line] for line in [line.split(', ') for line in data]]).transpose()
+pos = np.array(data).transpose()
+vel = np.zeros(pos.shape)
 
-velocities = np.zeros(positions.shape)
-
-print("velocities: \n", velocities)
-print("positions: \n", positions)
-
-past_pos = [{},{},{}]
-periodicity = np.array([0,0,0])
+dprint("Initial positions: \n", pos)
+dprint("Initial velocities: \n", vel)
 
 def lcm(a, b):
     return abs(a*b) // math.gcd(a, b)
+def cmp(a, b):
+    return (a > b) - (a < b)
 
-for step in range(0,1000000):
-    for axis in range(0,3):
-        if periodicity[axis]: continue
-        state = tuple(positions[axis]) + tuple(velocities[axis])
-        # print(state)
-        if state in past_pos[axis]:
-            print("\n*** Found periodicity for axis: ", axis, "\nStep:", step, ", state:\n", state)
-            print("same as step: ", past_pos[axis][state])
-            print("velocities: \n", velocities)
-            print("positions: \n", positions)
+# Part 1:
+
+for step in range(1,1001):
+    for axis in range(len(pos)):
+        for i,j in itertools.combinations(range(0,len(vel[0])),2):
+            dir = cmp(int(pos[axis][i]), int(pos[axis][j]))
+            vel[axis][i] -= dir
+            vel[axis][j] += dir
+        pos[axis] = pos[axis] + vel[axis]
+
+dprint("Velocities at step", step, ":\n", vel)
+dprint("positions at step:", step, ":\n", pos)
+
+total = int(sum(np.sum(abs(pos), axis=0) * np.sum(abs(vel), axis=0)))
+print(f"Part 1 - Total energy at step {step}: {total}")
+
+# Part 2:
+
+periodicity = [0,0,0]
+
+for axis in range(len(pos)):
+    initial_state = tuple(pos[axis]) + tuple(vel[axis])
+    for step in range(1,1000000):
+        for i,j in itertools.combinations(range(0,len(vel[0])),2):
+            dir = cmp(int(pos[axis][i]), int(pos[axis][j]))
+            vel[axis][i] -= dir
+            vel[axis][j] += dir
+        pos[axis] = pos[axis] + vel[axis]
+
+        if initial_state == tuple(pos[axis]) + tuple(vel[axis]):
+            dprint("Periodicity for axis", axis, ":", step)
             periodicity[axis] = step
-        else:
-            past_pos[axis][state] = step
-    if np.count_nonzero(periodicity) == 3:
-        break
-    for i,j in itertools.combinations(range(0,len(velocities[0])),2):
-        for axis,axis_positions in enumerate(positions):
-            if axis_positions[i] < axis_positions[j]:
-                velocities[axis][i] += 1
-                velocities[axis][j] -= 1
-            elif axis_positions[i] > axis_positions[j]:
-                velocities[axis][i] -= 1
-                velocities[axis][j] += 1
-    positions = positions + velocities
+            break
 
-print(periodicity)
-print(lcm(lcm(periodicity[0], periodicity[1]), periodicity[2]))
-# pot = np.sum(abs(positions), axis=0)
-# kin = np.sum(abs(velocities), axis=0)
-# total = sum(pot * kin)
-# print("\nstep: ", step+1)
-# print("velocities: \n", velocities)
-# print("positions: \n", positions)
-# print(total)
+dprint("Periodicities: ", periodicity)
+print("Part 2 -  Pediodicity: ", lcm(lcm(periodicity[0], periodicity[1]), periodicity[2]))
+
+# 319290382980408

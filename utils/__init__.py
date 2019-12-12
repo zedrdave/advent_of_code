@@ -3,12 +3,17 @@ from collections import defaultdict
 import numpy as np
 import scipy.sparse
 
-def loadCSVInput():
+def inputFile():
     import __main__
-    inputFile = os.path.join(os.path.dirname(os.path.abspath(__main__.__file__)), 'input.txt')
-    with open(inputFile) as f:
-        data = [int(i.strip()) for i in f.read().split(',')]
-    return data
+    return os.path.join(os.path.dirname(os.path.abspath(__main__.__file__)), 'input.txt')
+
+def loadCSVInput():
+    with open(inputFile()) as f:
+        return [int(i.strip()) for i in f.read().split(',')]
+
+def loadXYZInput():
+    with open(inputFile()) as f:
+        return [[int(pos[2:]) for pos in l.strip()[1:-1].split(', ')] for l in f]
 
 def setVerbosity(level):
     os.environ['VERBOSE'] = str(int(level))
