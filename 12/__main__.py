@@ -15,10 +15,8 @@ vel = np.zeros(pos.shape)
 dprint("Initial positions: \n", pos)
 dprint("Initial velocities: \n", vel)
 
-def lcm(a, b):
-    return abs(a*b) // math.gcd(a, b)
-def cmp(a, b):
-    return (a > b) - (a < b)
+lcm = lambda a,b: abs(a*b) // math.gcd(a, b)
+cmp = lambda a,b: (a > b) - (a < b)
 
 # Part 1:
 
