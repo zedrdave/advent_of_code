@@ -4,8 +4,8 @@ import os
 import math
 from ..utils import loadXYZInput, dprint, setVerbosity
 
-# Debug:
-setVerbosity(True)
+# Set to True for Debug:
+setVerbosity(False)
 
 data = loadXYZInput()
 
@@ -35,6 +35,8 @@ dprint("positions at step:", step, ":\n", pos)
 
 total = int(sum(np.sum(abs(pos), axis=0) * np.sum(abs(vel), axis=0)))
 print(f"Part 1 - Total energy at step {step}: {total}")
+
+# 8310
 
 # Part 2:
 
