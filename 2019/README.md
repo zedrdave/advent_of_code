@@ -4,7 +4,7 @@ See https://adventofcode.com/2019/about
 
 * To run `.py` code: `python3 ./FILE.py`
 * To run `.py` with necessary modules (when a `Pipfile` is present): `pipenv run python ./FILE.py`
-* To run `<DAY>/__main__.py` code: `python3 -m advent_of_code_2019.<DAY>` **from the directory above `advent_of_code_2019`** (runs as a module)
+* To run `<DAY>/__main__.py` code: `python3 -m 2019.<DAY>` (run as a module) **from the root directory**
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
@@ -39,7 +39,7 @@ Good reminder that good coding starts with reading the specs well.
 
 Wondering if there's a more convoluted but nicer way to solve, than brute-forcing. Something about deconstructing all the opcodes and identifying all params pointing to `0`?
 
-Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alternate [2_2_bis.c](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) version that could handle arbitrary opcodes.
+Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alternate [2_2_bis.c](https://github.com/zedrdave/advent_of_code/blob/master/2019/02/2_2_bis.c) version that could handle arbitrary opcodes.
 
 ## 3
 
@@ -73,13 +73,13 @@ sum(check(str(n)) for n in range(123456, 654321))
 
 ## 5
 
-My [arbitrary condiment version of day 2](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) turned out to be useful after all, and not arbitrary enough. Silly restrictions like:
+My [arbitrary condiment version of day 2](https://github.com/zedrdave/advent_of_code/blob/master/2019/02/2_2_bis.c) turned out to be useful after all, and not arbitrary enough. Silly restrictions like:
 * Fixed-sized opcodes
 * Opcodes only able to affect instruction pointer relative to current position
 
 … both made life harder for Day 5.
 
-Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/master/02/2_2_bis.c) that now uses a global IP (and memory buffer), allowing ops to do pretty much anything (I'm sure I'll be proven wrong on that at some future date). Initially went hogwild with macros, then chose clarity over concision, and used proper functions.
+Did a [clean rewrite](https://github.com/zedrdave/advent_of_code/blob/master/2019/02/2_2_bis.c) that now uses a global IP (and memory buffer), allowing ops to do pretty much anything (I'm sure I'll be proven wrong on that at some future date). Initially went hogwild with macros, then chose clarity over concision, and used proper functions.
 
 **TIL**: C ternary operator is *not* a macro (duh), and therefore: `(a ? b : c) = 1` does not compile (depending on compiler, it might compile to something useless).
 
@@ -88,17 +88,17 @@ Did a [clean rewrite](https://github.com/zedrdave/advent_of_code_2019/blob/maste
 
 Expecting part 2 to be a bit more solid, I went straight to a graph lib, with `networkx`. Code took a couple minutes (after spending 10 mins realising I had not used any graph lib in 2 years, did not remember any, googling around, and figuring out how to use it).
 
-Turns out it works just fine with a [basic `dict` of node parents](https://github.com/zedrdave/advent_of_code_2019/blob/master/06/6b.py). But something tells me more serious graphs will make a comeback.
+Turns out it works just fine with a [basic `dict` of node parents](https://github.com/zedrdave/advent_of_code/blob/master/2019/06/6b.py). But something tells me more serious graphs will make a comeback.
 
 ## 7
 
-> "There is no way [using all these global vars](https://github.com/zedrdave/advent_of_code_2019/blob/master/05/5_2.c) could ever come back and bite me in the aaaaaaa…"
+> "There is no way [using all these global vars](https://github.com/zedrdave/advent_of_code/blob/master/2019/05/5_2.c) could ever come back and bite me in the aaaaaaa…"
 
-Was immediately obvious that my "design choices" (ie laziness) on Day 5 were going to make today's code [hideously painful](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7_2.c).
+Was immediately obvious that my "design choices" (ie laziness) on Day 5 were going to make today's code [hideously painful](https://github.com/zedrdave/advent_of_code/blob/master/2019/07/7_2.c).
 
-With the stars out of the way, I did take the time for a [quick rewrite in C++](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.cpp) (objects, or at least struct, seem self-evident here). Dropped the function pointers (doable, but just didn't feel like spending the time brushing up on C++ method pointers).
+With the stars out of the way, I did take the time for a [quick rewrite in C++](https://github.com/zedrdave/advent_of_code/blob/master/2019/07/7.cpp) (objects, or at least struct, seem self-evident here). Dropped the function pointers (doable, but just didn't feel like spending the time brushing up on C++ method pointers).
 
-And then, for comparison (and also, let's be honest: future use), I did a [quick rewrite in Python](https://github.com/zedrdave/advent_of_code_2019/blob/master/07/7.py).
+And then, for comparison (and also, let's be honest: future use), I did a [quick rewrite in Python](https://github.com/zedrdave/advent_of_code/blob/master/2019/07/7.py).
 
 Looking at the near-exact identical implementations in C++ and Python, makes me realise why I haven't written a line of C++ in years. [Programming is fun again](https://www.xkcd.com/353/).
 
@@ -106,7 +106,7 @@ Looking at the near-exact identical implementations in C++ and Python, makes me 
 
 A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
 
-… which I decided to turn into a [ridiculously overblown version](https://github.com/zedrdave/advent_of_code_2019/blob/master/08/8_ML.py) that creates and trains a Machine Learning model (with Keras) to identify each bitmap character and output its text equivalent.
+… which I decided to turn into a [ridiculously overblown version](https://github.com/zedrdave/advent_of_code/blob/master/2019/08/8_ML.py) that creates and trains a Machine Learning model (with Keras) to identify each bitmap character and output its text equivalent.
 
 * Its only assumptions, are an input made of 6x5 px uppercase letters (it originally looked for separations, but turns out some chars are touching each other).
 * The code generates its own training set using available fonts. Due to cross-platform limitations, finding any univeersal monospaced fonts was a PITA… I finally gave up and added open-sourced fonts to the package.
@@ -133,7 +133,7 @@ Mostly an opportunity for some code cleanup:
 * Created a standalone `utils.OCR` class, with the ML OCR reader from Day 8
 * Turned Intcode `VM`'s main function (`run`) into a generator, that `yield` output values…
 
-And with all these changes, I was able to rewrite my original [very raw solution](https://github.com/zedrdave/advent_of_code_2019/blob/master/11/11.py) into a neat concise bit of code that not only solves the problem rather elegantly, but also uses OCR to predict the text output from the bitmap…
+And with all these changes, I was able to rewrite my original [very raw solution](https://github.com/zedrdave/advent_of_code/blob/master/2019/11/11.py) into a neat concise bit of code that not only solves the problem rather elegantly, but also uses OCR to predict the text output from the bitmap…
 
 One major change from my initial code: using a sparse matrix, rather than allocating a ridiculously large `numpy.array` and hoping the program would remain within bounds. Turns out I did not even need `scipy.sparse`, as a mere `defaultdict(int)` with tuple keys works beautifully…
 
