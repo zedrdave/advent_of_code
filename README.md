@@ -136,3 +136,9 @@ Mostly an opportunity for some code cleanup:
 And with all these changes, I was able to rewrite my original [very raw solution](https://github.com/zedrdave/advent_of_code_2019/blob/master/11/11.py) into a neat concise bit of code that not only solves the problem rather elegantly, but also uses OCR to predict the text output from the bitmap…
 
 One major change from my initial code: using a sparse matrix, rather than allocating a ridiculously large `numpy.array` and hoping the program would remain within bounds. Turns out I did not even need `scipy.sparse`, as a mere `defaultdict(int)` with tuple keys works beautifully…
+
+## 12
+
+Straightfoward numpy stuff (could be done with native python lists, but I really did not want to trade numpy vectorised operations for a clusterfest of list comprehensions).
+
+Part 2 stumped me for a solid 2 minutes, at which point I decided to go for my morning shower and coffee. After which, obvious trick (treat each dimension separately) became clear as day.
