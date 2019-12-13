@@ -1,7 +1,12 @@
 import os
+import tty
+import termios
+import sys
 from collections import defaultdict
 import numpy as np
 import scipy.sparse
+
+cmp = lambda a,b: (a > b) - (a < b)
 
 def inputFile():
     import __main__
@@ -37,7 +42,7 @@ def sparseToDense(bitmap):
     return scipy.sparse.csr_matrix((vs, (ii, jj))).toarray()
 
 
-def asciiPrint(bitmap, transpose=False):
+def asciiPrint(bitmap, transpose=False, reset=False, header=""):
     if type(bitmap) is defaultdict:
         bitmap = sparseToDense(bitmap)
     else:
@@ -46,4 +51,18 @@ def asciiPrint(bitmap, transpose=False):
         bitmap = bitmap.transpose()
     if bitmap.shape[0] > 500 or bitmap.shape[1] > 500:
         raise(Exception(f"Bitmap too large to be printed: {np.array(bitmap).shape}"))
-    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵"][int(i)] for i in line) for line in bitmap))
+    if reset:
+        print(chr(27) + "[2J", flush=False)
+    print(header, flush=False)
+    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵"][int(i)] for i in line) for line in bitmap), flush=False)
+    sys.stdout.flush()
+
+def getChar():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
