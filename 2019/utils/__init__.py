@@ -46,4 +46,4 @@ def asciiPrint(bitmap, transpose=False):
         bitmap = bitmap.transpose()
     if bitmap.shape[0] > 500 or bitmap.shape[1] > 500:
         raise(Exception(f"Bitmap too large to be printed: {np.array(bitmap).shape}"))
-    print("\n".join(''.join([u"⬛️",u"⬜️"][int(i)] for i in line) for line in bitmap))
+    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵"][int(i)] for i in line) for line in bitmap))

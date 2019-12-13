@@ -19,6 +19,9 @@ class OP(IntEnum):
 
 # https://github.com/e-nomem/AdventOfCode/blob/master/2019/intcode/io.py
 
+class NeedInputException(Exception):
+    pass
+
 class VM:
     def __init__(self, program, phase = None):
         self.mem = collections.defaultdict(int)
@@ -44,7 +47,7 @@ class VM:
                 self.IP += 4
             elif cmd == OP.INPUT:
                 if input is None:
-                    raise(Exception("Missing input!"))
+                    raise(NeedInputException("Missing input!"))
                 dprint(f"using input: {input}")
                 self.set_param(1, int(input))
                 self.IP += 2
