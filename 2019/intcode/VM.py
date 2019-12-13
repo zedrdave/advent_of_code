@@ -34,7 +34,10 @@ class VM:
             self.set_param(1, phase)
             self.IP += 2
 
-    def run(self):
+    def run(self, input = None):
+        if input is not None:
+            self.input += input
+
         while self.mem[self.IP] != OP.HALT:
             # dprint(f"[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
 
