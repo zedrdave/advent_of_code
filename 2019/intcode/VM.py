@@ -29,11 +29,12 @@ class VM:
             self.mem[i] = d
         self.RB = 0
         self.IP = 0
+        self.input = []
         if phase:
             self.set_param(1, phase)
             self.IP += 2
 
-    def run(self, input = None):
+    def run(self):
         while self.mem[self.IP] != OP.HALT:
             # dprint(f"[{self.IP}] {self.mem[self.IP]}: {self.mem[self.IP+1]} {self.mem[self.IP+2]} {self.mem[self.IP+3]}")
 
@@ -46,10 +47,11 @@ class VM:
                 self.set_param(3, self.param(1) * self.param(2))
                 self.IP += 4
             elif cmd == OP.INPUT:
-                if input is None:
+                if len(self.input) == 0:
                     raise(NeedInputException("Missing input!"))
-                dprint(f"using input: {input}")
-                self.set_param(1, int(input))
+                i = self.input.pop(0)
+                dprint(f"using input: {i}")
+                self.set_param(1, int(i))
                 self.IP += 2
             elif cmd == OP.OUTPUT:
                 output = int(self.param(1))

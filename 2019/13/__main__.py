@@ -41,81 +41,63 @@ def getch():
 
 
 def look_ahead(vm):
-    bak_mem = copy.deepcopy(vm.mem)
-    bak_RB = vm.RB
-    bak_IP = vm.IP
+    temp_vm = copy.deepcopy(vm)
 
-    # ball = [x for x,v in screen.items() if v == 4][0]
-    ball = (0,0)
-    while vm.is_running:
-        try:
-            x = next(vm.run(0))
-            y = next(vm.run())
-            id = next(vm.run())
-            if id == 4 and y == 17:
-                ball = (x,y)
+    ball_x = 0
+    ball_moves = 1
+    temp_vm.input = [0]
+    for x,y,id in zip(*[iter(temp_vm.run())]*3):
+        temp_vm.input = [0]
+        if id == 4:
+            ball_moves += 1
+            if y == 17:
+                ball_x = x
                 break
-        except StopIteration:
-            break
-    vm.mem = bak_mem
-    vm.RB = bak_RB
-    vm.IP = bak_IP
-    return ball
+
+    return (ball_moves, ball_x)
+
+cmp = lambda a,b: (a > b) - (a < b)
+
+
+# Let's begin:
+demo_mode = True
 
 instructions = loadCSVInput()
+instructions[0] = 2
+vm = VM(instructions)
 
 score = 0
-input_key = None
-instructions[0] = 2
-brick_count = None
-
-vm = VM(instructions)
 screen=defaultdict(int)
-auto_pilot = True
+
+key_mapping = {44:-1, 46:1, 32:0}
 
 while vm.is_running:
     try:
-        x = next(vm.run(input_key))
-        y = next(vm.run())
-        id = next(vm.run())
+        x, y, id = next(vm.run()), next(vm.run()), next(vm.run())
         if x == -1 and y == 0:
             score = id
+            print(f"[Score: {score}]")
         else:
             screen[x,y] = id
-        input_key = None
     except StopIteration:
-        print("################\n     YOU WIN!\n\n  Final Score:", score, "\n################\n")
+        print("###################\n     YOU WIN!\n\n Final Score:", score, "\n###################\n")
         break
     except NeedInputException:
-        print(f"[Score: {score}]")
-        asciiPrint(screen, transpose=True)
-        if auto_pilot:
-            paddle = [x for x,v in screen.items() if v == 3][0][0]
-            ball = [x for x,v in screen.items() if v == 4][0]
-            if ball[1] == 17:
-                next_ball = ball[0]
+            asciiPrint(screen, transpose=True)
+            if demo_mode:
+                paddle = [x for x,v in screen.items() if v == 3][0][0]
+                num_moves, next_ball_x = look_ahead(vm)
+                dprint(f"Paddle: {paddle} | Ball (in {num_moves}): {next_ball_x}")
+                dist = abs(paddle-next_ball_x)
+                vm.input = [cmp(next_ball_x, paddle)]*dist + [0]*(num_moves-dist)
+                dprint("Next moves: ", vm.input)
             else:
-                next_ball = look_ahead(vm)[0]
-            dprint(f"Paddle: {paddle} | Ball: {ball} -> {next_ball}")
-            if paddle < next_ball:
-                move = 1
-            elif paddle > next_ball:
-                move = -1
-            else:
-                move = 0
-            dprint("Move paddle: ", move)
-            input_key = move
-        else:
-            input_key = getch()
-            dprint("key press: ", ord(input_key))
-            if ord(input_key) == 44:
-                input_key = -1
-            elif ord(input_key) == 46:
-                input_key = 1
-            elif ord(input_key) == 32:
-                input_key = 0
-            else:
-                break
+                ch = getch()
+                dprint("Key pressed: ", ord(ch))
+                if ord(ch) in key_mapping:
+                    vm.input = [key_mapping[ord(ch)]]
+                else:
+                    break
 
 # Disassembly:
 #  Score stored at: 386
