@@ -2,6 +2,7 @@ import copy
 import itertools
 import collections
 from enum import IntEnum
+from ..utils import inputFile
 
 class OP(IntEnum):
     ADD = 1
@@ -91,13 +92,13 @@ class VM:
             self.mem[self.mem[self.IP+n]] = val
 
 
-with open("input.txt","r") as f:
+with open(inputFile()) as f:
     instructions = [int(i.strip()) for i in f.read().split(',')]
 
-# Part 1:
+print("Part 1:")
 VM(instructions).run(1)
 # 2494485073
 
-# Part 2:
+print("Part 2:")
 VM(instructions).run(2)
 # 44997
