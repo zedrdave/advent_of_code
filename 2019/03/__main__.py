@@ -1,4 +1,6 @@
-lines = [l.strip().split(',') for l in open("input_test0.txt", "r").readlines()]
+from ..utils import inputFile, dprint
+
+lines = [l.strip().split(',') for l in open(inputFile(), "r").readlines()]
 paths = [[(w[0], int(w[1:])) for w in l] for l in lines]
 
 # Wrapper to avoid dealing with confusing p[0]/p[1] all the time:
@@ -65,9 +67,9 @@ for s1 in ls1:
         # if step_counts and s1_steps + s2_steps > min(step_counts): continue
     s1_steps += L1Dist(*s1)
 
-print("Intersections: ", intersections)
+dprint("Intersections: ", intersections)
 dists = [abs(p.x)+abs(p.y) for p in intersections]
-print("L1 dists: ", dists)
-print("Min L1 dist: ", min(dists))
-print("Step counts: ", step_counts)
-print("Min Step count: ", min(step_counts))
+dprint("L1 dists: ", dists)
+print("Part 1 - Min L1 dist: ", min(dists))
+dprint("Step counts: ", step_counts)
+print("Part 2 - Min Step count: ", min(step_counts))
