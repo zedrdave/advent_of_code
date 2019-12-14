@@ -1,4 +1,6 @@
-with open('input.txt', 'r') as f:
+from ..utils import inputFile
+
+with open(inputFile(), 'r') as f:
     parents = dict( reversed(orbit.split(')')) for orbit in f.read().splitlines() )
 
 ancestors = lambda n: ancestors(parents[n]).union([parents[n]]) if n in parents else set()
