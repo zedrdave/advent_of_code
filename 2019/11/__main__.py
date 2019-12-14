@@ -15,7 +15,8 @@ def paint(dir = 0, pos=(0,0), hull=defaultdict(int)):
     robot = VM(instructions)
     while True:
         try:
-            paint_color = next(robot.run(hull[tuple(pos)]))
+            robot.input = [hull[tuple(pos)]]
+            paint_color = next(robot.run())
             turn = next(robot.run())
             dprint(f"[{pos}]: {hull[tuple(pos)]} -> {paint_color}")
             hull[tuple(pos)] = paint_color
