@@ -114,6 +114,6 @@ if save_animation:
         30, 30, 255,  #blue
     ] + [0]*(768 - 5*3)
     palette = palette + [0]*(768-len(palette))
-    rescale = lambda img: img.resize((img.size[0]*20,img.size[1]*20))
+    rescale = lambda img: img.resize((img.size[0]*15,img.size[1]*15))
     images = (rescale(Image.fromarray(sparseToDense(frame).transpose().astype('uint8'), 'P')) for frame in frames)
-    next(images).save('animation2.png', save_all=True, append_images=images, duration=20, loop=0, palette=palette)
+    next(images).save('animation.gif', save_all=True, append_images=images, duration=20, loop=0, palette=palette, optimize=True)
