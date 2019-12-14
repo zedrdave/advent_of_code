@@ -8,9 +8,9 @@ import scipy.sparse
 
 cmp = lambda a,b: (a > b) - (a < b)
 
-def inputFile():
+def inputFile(file = 'input.txt'):
     import __main__
-    return os.path.join(os.path.dirname(os.path.abspath(__main__.__file__)), 'input.txt')
+    return os.path.join(os.path.dirname(os.path.abspath(__main__.__file__)), file)
 
 def loadCSVInput():
     with open(inputFile()) as f:
