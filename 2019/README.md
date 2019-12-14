@@ -157,3 +157,9 @@ Share of time spent trying to solve Part 2:
 When thinking about the easiest way to implement auto-play, I briefly considered a follow-the-ball heuristic, but (erraneously) assumed that this might not always be enough to catch the ball. Instead, I took advantage of Intcode nice little self-contained VM, to run a look-ahead each time the ball is hit by the paddle. Overkill as usual, but I quite like it, since a similar approach could be used to implement some sophisticated heuristics (eg where multiple options need to be analysed each time).
 
 For **interactive mode**: I struggled a bit with reading arrow chars from Python's `sys.stdin.read()`, and ended up mapping letters instead. It also turns out that Curses does not play well with double-char unicode emojis (no nice colourful output).
+
+## 14
+
+Starting to get the hang of that "do not overcomplicate" thing: just as I was about to create a DAG of reactions (because of course you need to take into account multiple ways to produce the same element), I ran a quick Counter on all the products, and realised they were all unique. Simple `product -> reactants` dict was more than enough.
+
+I *did* attempt a brute-force for Part 2, stopped after 20s… and implemented a quick bisection method, as any sane person would.
