@@ -1,8 +1,9 @@
 import numpy as np
 import copy
 import math
+from ..utils import inputFile
 
-with open('input.txt', 'r') as fp:
+with open(inputFile(), 'r') as fp:
     data = np.array([list(line.strip()) for line in fp]) == '#'
 
 data = np.swapaxes(data, 0, 1) # swap coords from (y,x) to (x,y):
