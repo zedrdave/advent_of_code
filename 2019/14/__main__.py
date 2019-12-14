@@ -15,19 +15,15 @@ reactions = { r[1][0][1]: (int(r[1][0][0]),r[0]) for r in reactions }
 
 def orePerFuel(fuel):
     need = {'FUEL': fuel}
-
     while True:
-        need_e = next((e for e,n in need.items() if n > 0 and e != 'ORE'), False)
-        if not need_e:
-            break
-        need_n = need[need_e]
+        try:
+            need_e, need_n = next((e,n) for e,n in need.items() if n > 0 and e != 'ORE')
+        except: break
         prod_n, add_elements = reactions[need_e]
         mult_reac = math.ceil(need_n/prod_n)
         for coef,e in add_elements:
             need[e] = need.get(e, 0) + mult_reac * coef
         need[need_e] -= mult_reac*prod_n
-        if need[need_e] == 0:
-            del(need[need_e])
     return need['ORE']
 
 print(f"Part 1 - For 1 FUEL, need: {orePerFuel(1)} ORE")
