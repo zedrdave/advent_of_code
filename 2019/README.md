@@ -11,39 +11,34 @@ See https://adventofcode.com/2019/about
 OCaml fans: [right this way](https://github.com/regnat/aoc-2019)…
 
 ## 1
-### 1.1
 
-Ideal job for Python + `numpy` with vectorisation. Might be a tad more compact in `R`.
+Ideal job for Python + `numpy` with vectorisation.
 
 Didn't initially check for negative vals. Turned out there weren't any, but probably not good practice.
 
-### 1.2
+Part 1 was a simpler version of [the Tyranny of the Rocket Equation](https://www.nasa.gov/mission_pages/station/expeditions/expedition30/tryanny.html) (minus fuel exhaustion). I think it even gets a mention in [XKCD's What If](https://what-if.xkcd.com) book version…
 
-Simpler version of [the Tyranny of the Rocket Equation](https://www.nasa.gov/mission_pages/station/expeditions/expedition30/tryanny.html) (minus fuel exhaustion). I think it even gets a mention in [XKCD's What If](https://what-if.xkcd.com) book version…
+Part 2 could probably be solved using arithmetico-geometric series convergence (though dealing with `floor` would be a pain).
 
-Can probably be solved using arithmetico-geometric series convergence (though dealing with the `floor` would be a pain).
+**Today's lesson:** Recursion is fun.
 
-## 2
-
-Solved it in Python, then dusted off gcc to see if it looked nicer (it doesn't, but I suspect it might, if there start being a richer opcode grammar).
-
-For the sake of it, I added all necessary checks in the C code, but I reckon size could be halved by just relying on correctly formed input.
-
-### 2.1
+### 2
 
 Guess who's got two thumbs and wasted 10 mins by failing to read the last line of instructions… 👈😑🤟
 
 Good reminder that good coding starts with reading the specs well.
 
-### 2.2
-
-Wondering if there's a more convoluted but nicer way to solve, than brute-forcing. Something about deconstructing all the opcodes and identifying all params pointing to `0`?
+Wondering if there's a more convoluted but nicer way to solve part 2, than brute-forcing. Something about deconstructing all the opcodes and identifying all params pointing to `0`?
 
 Also went full [Arbitrary Condiment](https://www.xkcd.com/974/), with an alternate [2_2_bis.c](https://github.com/zedrdave/advent_of_code/blob/master/2019/02/2_2_bis.c) version that could handle arbitrary opcodes.
 
-## 3
+Solved Part 2 in Python, then dusted off gcc to see if it looked nicer (it doesn't, but I suspect it might, if there start being a richer opcode grammar).
 
-### 3.1
+For the sake of it, I added all necessary checks in the C code, but I reckon size could be halved by just relying on correctly formed input.
+
+**Today's lesson:** Read *all* the specs.
+
+## 3
 
 Went with detecting intersections between two sets of segments (restricted to vertical or horizontal).
 
@@ -51,13 +46,13 @@ Thought that foregoing binary-tree sweep search implementation was already total
 
 Decidedly not a natural competitive-coder here. (but still a valuable lesson in the dangers of overthinking and premature optimisation)
 
-### 3.2
-
-Made code clearer, life easier and bugs rarer, by implementing a quick wrapper class `Point(x, y)`: dealing with `p.x`/`p.y` rather than `p[0]`/`p[1]`…
+Before solving Part 2: made code clearer, life easier and bugs rarer, by implementing a quick wrapper class `Point(x, y)`… Then remembered that `[collections.namedtuple](https://docs.python.org/3/library/collections.html#collections.namedtuple)` existed (FFS: `Point` is even the doc's example).
 
 **TIL** that `x1 < y < x2` is perfectly good Python, and indeed equivalent to `x1 < y and y < x2` as one would hope/expect (obvious in retrospect).
 
 Can easily optimise by adding: `if step_counts and s1_steps + s2_steps > min(step_counts): continue`, but lose the ability to debug the process.
+
+**Today's lesson:** Stop solving *general* (continous plane), when *specific* (discrete grid) is so much easier to solve.
 
 ## 4
 
@@ -71,6 +66,8 @@ check = lambda n: list(n) == sorted(n) and 2 in map(n.count, n)
 sum(check(str(n)) for n in range(123456, 654321))
 ```
 
+**Today's lesson:** Take a breath and try again.
+
 ## 5
 
 My [arbitrary condiment version of day 2](https://github.com/zedrdave/advent_of_code/blob/master/2019/02/2_2_bis.c) turned out to be useful after all, and not arbitrary enough. Silly restrictions like:
@@ -83,12 +80,15 @@ Did a [clean rewrite](https://github.com/zedrdave/advent_of_code/blob/master/201
 
 **TIL**: C ternary operator is *not* a macro (duh), and therefore: `(a ? b : c) = 1` does not compile (depending on compiler, it might compile to something useless).
 
+**Today's lesson:** Thinking ahead sometimes pays off.
 
 ## 6
 
 Expecting part 2 to be a bit more solid, I went straight to a graph lib, with `networkx`. Code took a couple minutes (after spending 10 mins realising I had not used any graph lib in 2 years, did not remember any, googling around, and figuring out how to use it).
 
 Turns out it works just fine with a [basic `dict` of node parents](https://github.com/zedrdave/advent_of_code/blob/master/2019/06/6b.py). But something tells me more serious graphs will make a comeback.
+
+**Today's lesson:** Stop overthinking.
 
 ## 7
 
@@ -102,6 +102,8 @@ And then, for comparison (and also, let's be honest: future use), I did a [quick
 
 Looking at the near-exact identical implementations in C++ and Python, makes me realise why I haven't written a line of C++ in years. [Programming is fun again](https://www.xkcd.com/353/).
 
+**Today's lesson:** Globals are *evil*.
+
 ## 8
 
 A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
@@ -113,17 +115,23 @@ A gentle Sunday-friendly 5-line refresher in Numpy array manipulations.
 * The training set generation also uses scaled down versions of multiple sizes, to add some variability.
 * Running the code with pipenv (`pipenv run python 8_ML.py`) should automatically install all needed packages before running.
 
+**Today's lesson:** Machine Learning is fun!
+
 ## 9
 
-Another nice and easy one. Woke up much earlier than usual and started at 6:35am (questions open at 6am local time), but still not enough to crack the top 1000.
+Another nice and easy one (thanks to my Python rewrite). Woke up much earlier than usual and started at 6:35am (questions open at 6am local time), but still not enough to crack the top 1000.
 
 With this addition, I believe Intcode can now execute subroutines… I am tempted to rewrite Day 7's permutation optimisation, into one single Intcode program.
+
+**Today's lesson:** Python makes everything better.
 
 ## 10
 
 Grid/pathfinder problems are clearly my blind spot (don't encounter many of these in real life work).
 
 First time I had to leave halfway through (after a laborious silver star) to go to work. After a bit of fresh air, some coffee and time to think, it turned out the solution was fairly simple (GCD for the win). Highlight of that day: realising I literally do not remember even the most basic trig, and taking 5 mins to convert negative angles to positive.
+
+**Today's lesson:** Trigonometry is sometimes useful.
 
 ## 11
 
@@ -137,11 +145,15 @@ And with all these changes, I was able to rewrite my original [very raw solution
 
 One major change from my initial code: using a sparse matrix, rather than allocating a ridiculously large `numpy.array` and hoping the program would remain within bounds. Turns out I did not even need `scipy.sparse`, as a mere `defaultdict(int)` with tuple keys works beautifully…
 
+**Today's lesson:** Use sparsity, Luke.
+
 ## 12
 
 Straightfoward numpy stuff (could be done with native python lists, but I really did not want to trade numpy vectorised operations for a clusterfest of list comprehensions).
 
 Part 2 stumped me for a solid 2 minutes, at which point I decided to go for my morning shower and coffee. After which, obvious trick (treat each dimension separately) became clear as day.
+
+**Today's lesson:** Take a coffee break.
 
 ## 13
 
@@ -158,8 +170,12 @@ When thinking about the easiest way to implement auto-play, I briefly considered
 
 For **interactive mode**: I struggled a bit with reading arrow chars from Python's `sys.stdin.read()`, and ended up mapping letters instead. It also turns out that Curses does not play well with double-char unicode emojis (no nice colourful output).
 
+**Today's lesson:** *Breakout* is hard. But fun!
+
 ## 14
 
 Starting to get the hang of that "do not overcomplicate" thing: just as I was about to create a DAG of reactions (because of course you need to take into account multiple ways to produce the same element), I ran a quick Counter on all the products, and realised they were all unique. Simple `product -> reactants` dict was more than enough.
 
 I *did* attempt a brute-force for Part 2, stopped after 20s… and implemented a quick bisection method, as any sane person would.
+
+**Today's lesson:** `O(log n)`, bitch.
