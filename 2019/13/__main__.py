@@ -5,11 +5,13 @@ from collections import defaultdict
 from ..intcode.VM import VM, NeedInputException
 from ..utils import loadCSVInput, dprint, asciiPrint, setVerbosity, sparseToDense, getChar, cmp
 
+
 # Debug:
 setVerbosity(False)
 
 interactive = False # use True to play with keyboard
 use_curses = False # Work in progress
+save_animation = True
 
 # Part 1
 
@@ -53,6 +55,7 @@ instructions[0] = 2
 vm = VM(instructions)
 screen=defaultdict(int)
 score = 0
+game_started = False
 
 if use_curses:
     from ..utils.curses import initCurses, cursesOutput, cleanCurses
@@ -60,6 +63,9 @@ if use_curses:
     termOutput = cursesOutput
 else:
     termOutput = asciiPrint
+
+if save_animation:
+    frames = []
 
 key_mapping = {44:-1, 46:1, 32:0}
 
@@ -70,10 +76,13 @@ while vm.is_running:
             score = id
         else:
             screen[x,y] = id
+            if save_animation and id == 4 and game_started:
+                frames += [copy.deepcopy(screen)]
     except StopIteration:
         print("###################\n     YOU WIN!\n\n Final Score:", score, "\n###################\n")
         break
     except NeedInputException:
+            game_started = True
             termOutput(screen, transpose=True, reset=True, header=f"[Score: {score}]\n")
             if interactive:
                 ch = getChar()
@@ -94,3 +103,17 @@ if use_curses:
     cleanCurses()
 
 print("Part 2 - Final score: ", score)
+
+if save_animation:
+    print("Saving animation…")
+    from PIL import Image
+    palette = [0, 0, 0,  #black
+        211, 223, 223, #white
+        229, 39,  39,  #red
+        244, 214, 17,  #yellow
+        30, 30, 255,  #blue
+    ] + [0]*(768 - 5*3)
+    palette = palette + [0]*(768-len(palette))
+    rescale = lambda img: img.resize((img.size[0]*20,img.size[1]*20))
+    images = (rescale(Image.fromarray(sparseToDense(frame).transpose().astype('uint8'), 'P')) for frame in frames)
+    next(images).save('animation2.png', save_all=True, append_images=images, duration=20, loop=0, palette=palette)
