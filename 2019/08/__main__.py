@@ -1,6 +1,7 @@
+from ..utils import inputFile
 import numpy as np
 
-digits = [int(i) for i in open('input.txt', 'r').read().strip()]
+digits = [int(i) for i in open(inputFile()).read().strip()]
 
 size = (6,25)
 layers = np.array(digits).reshape((-1,size[0]*size[1]))
