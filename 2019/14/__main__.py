@@ -1,4 +1,5 @@
 import math
+from collections import defaultdict
 from ..utils import dprint, setVerbosity, inputFile
 
 # Debug:
@@ -14,15 +15,15 @@ with open(inputFile("input.txt")) as f:
 reactions = { r[1][0][1]: (int(r[1][0][0]),r[0]) for r in reactions }
 
 def orePerFuel(fuel):
-    need = {'FUEL': fuel}
+    need = defaultdict(int, {'FUEL': fuel})
     while True:
         try:
             need_e, need_n = next((e,n) for e,n in need.items() if n > 0 and e != 'ORE')
         except: break
-        prod_n, add_elements = reactions[need_e]
+        prod_n, reactants = reactions[need_e]
         mult_reac = math.ceil(need_n/prod_n)
-        for coef,e in add_elements:
-            need[e] = need.get(e, 0) + mult_reac * coef
+        for coef,reactant in reactants:
+            need[reactant] += mult_reac * coef
         need[need_e] -= mult_reac*prod_n
     return need['ORE']
 
