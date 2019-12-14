@@ -153,7 +153,7 @@ Straightfoward numpy stuff (could be done with native python lists, but I really
 
 Part 2 stumped me for a solid 2 minutes, at which point I decided to go for my morning shower and coffee. After which, obvious trick (treat each dimension separately) became clear as day.
 
-**Today's lesson:** Take a coffee break.
+**Today's lesson:** When stuck: go for a coffee break.
 
 ## 13
 
