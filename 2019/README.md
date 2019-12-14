@@ -2,9 +2,9 @@
 
 See https://adventofcode.com/2019/about
 
-* To run `.py` code: `python3 ./FILE.py`
-* To run `.py` with necessary modules (when a `Pipfile` is present): `pipenv run python ./FILE.py`
-* To run `<DAY>/__main__.py` code: `python3 -m 2019.<DAY>` (run as a module) **from the root directory**
+* To run Python code (when `<DAY>/__main__.py` is present): `python3 -m 2019.<DAY>` **from the repo root**
+* If you have Pipenv: `pipenv run python3 -m 2019.<DAY>`, from the repo root (will automatically install all dependencies)
+* To run standalone `.py` code: `python3 ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
