@@ -8,7 +8,7 @@ from ..utils import sparseToDense
 
 frames = []
 
-def snapshot(sparseDict, printToScreen = True, saveAnimation = False, update = {}):
+def snapshot(sparseDict, printToScreen = True, saveAnimation = False, update = {}, **kwargs):
     if not printToScreen and not saveAnimation:
         return
     frame = copy.copy(sparseDict)
@@ -17,7 +17,7 @@ def snapshot(sparseDict, printToScreen = True, saveAnimation = False, update = {
         global frames
         frames += [frame]
     if printToScreen:
-        asciiPrint(frame, transpose = True)
+        asciiPrint(frame, transpose = True, **kwargs)
 
 
 def asciiPrint(bitmap, transpose=False, reset=False, header=""):

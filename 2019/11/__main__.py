@@ -1,7 +1,8 @@
 import numpy as np
 from collections import defaultdict
 from ..intcode.VM import VM
-from ..utils import loadCSVInput, dprint, asciiPrint, setVerbosity, sparseToDense
+from ..utils import loadCSVInput, dprint, setVerbosity, sparseToDense
+from ..graphics import asciiPrint
 from ..utils.OCR import CharPredictor
 
 # Debug:

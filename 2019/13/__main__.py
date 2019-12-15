@@ -3,7 +3,8 @@ import copy
 
 from collections import defaultdict
 from ..intcode.VM import VM, NeedInputException
-from ..utils import loadCSVInput, dprint, asciiPrint, setVerbosity, sparseToDense, getChar, cmp
+from ..utils import loadCSVInput, dprint, setVerbosity, sparseToDense, getChar, cmp
+from ..graphics import asciiPrint, snapshot, saveAnimatedGIF
 
 
 # Debug:
@@ -11,7 +12,8 @@ setVerbosity(False)
 
 interactive = False # use True to play with keyboard
 use_curses = False # Work in progress
-save_animation = True
+printToScreen = True
+saveAnimation = True
 
 # Part 1
 
@@ -60,12 +62,6 @@ game_started = False
 if use_curses:
     from ..utils.curses import initCurses, cursesOutput, cleanCurses
     initCurses()
-    termOutput = cursesOutput
-else:
-    termOutput = asciiPrint
-
-if save_animation:
-    frames = []
 
 key_mapping = {44:-1, 46:1, 32:0}
 
@@ -76,14 +72,18 @@ while vm.is_running:
             score = id
         else:
             screen[x,y] = id
-            if save_animation and id == 4 and game_started:
-                frames += [copy.deepcopy(screen)]
+            if id == 4 and game_started:
+                snapshot(screen, False, saveAnimation)
     except StopIteration:
         print("###################\n     YOU WIN!\n\n Final Score:", score, "\n###################\n")
         break
     except NeedInputException:
             game_started = True
-            termOutput(screen, transpose=True, reset=True, header=f"[Score: {score}]\n")
+            if use_curses:
+                cursesOutput(screen, header=f"[Score: {score}]\n")
+            else:
+                snapshot(screen, printToScreen, saveAnimation, reset=True, header=f"[Score: {score}]\n")
+
             if interactive:
                 ch = getChar()
                 dprint("Key pressed: ", ord(ch))
@@ -104,16 +104,19 @@ if use_curses:
 
 print("Part 2 - Final score: ", score)
 
-if save_animation:
-    print("Saving animation…")
-    from PIL import Image
-    palette = [0, 0, 0,  #black
-        211, 223, 223, #white
-        229, 39,  39,  #red
-        244, 214, 17,  #yellow
-        30, 30, 255,  #blue
-    ] + [0]*(768 - 5*3)
-    palette = palette + [0]*(768-len(palette))
-    rescale = lambda img: img.resize((img.size[0]*15,img.size[1]*15))
-    images = (rescale(Image.fromarray(sparseToDense(frame).transpose().astype('uint8'), 'P')) for frame in frames)
-    next(images).save('animation.gif', save_all=True, append_images=images, duration=20, loop=0, palette=palette, optimize=True)
+if saveAnimation:
+    saveAnimatedGIF(freq=1, duration=5)
+
+# if save_animation:
+#     print("Saving animation…")
+#     from PIL import Image
+#     palette = [0, 0, 0,  #black
+#         211, 223, 223, #white
+#         229, 39,  39,  #red
+#         244, 214, 17,  #yellow
+#         30, 30, 255,  #blue
+#     ] + [0]*(768 - 5*3)
+#     palette = palette + [0]*(768-len(palette))
+#     rescale = lambda img: img.resize((img.size[0]*15,img.size[1]*15))
+#     images = (rescale(Image.fromarray(sparseToDense(frame).transpose().astype('uint8'), 'P')) for frame in frames)
+#     next(images).save('animation.gif', save_all=True, append_images=images, duration=20, loop=0, palette=palette, optimize=True)

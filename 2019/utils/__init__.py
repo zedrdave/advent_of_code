@@ -42,21 +42,6 @@ def sparseToDense(bitmap):
     return scipy.sparse.csr_matrix((vs, (ii, jj))).toarray()
 
 
-def asciiPrint(bitmap, transpose=False, reset=False, header=""):
-    if type(bitmap) is defaultdict:
-        bitmap = sparseToDense(bitmap)
-    else:
-        bitmap = np.array(bitmap)
-    if transpose:
-        bitmap = bitmap.transpose()
-    if bitmap.shape[0] > 500 or bitmap.shape[1] > 500:
-        raise(Exception(f"Bitmap too large to be printed: {np.array(bitmap).shape}"))
-    if reset:
-        print(chr(27) + "[2J", flush=False)
-    print(header, flush=False)
-    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖"][int(i)] for i in line) for line in bitmap), flush=False)
-    sys.stdout.flush()
-
 def getChar():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
