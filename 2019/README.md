@@ -3,7 +3,7 @@
 See https://adventofcode.com/2019/about
 
 * To run Python code (when `<DAY>/__main__.py` is present): `python3 -m 2019.<DAY>` **from the repo root**
-* If you have Pipenv: `pipenv run python3 -m 2019.<DAY>`, from the repo root (will automatically install all dependencies)
+* *Optional* (if you have Pipenv installed): `pipenv run python3 -m 2019.<DAY>`
 * To run standalone `.py` code: `python3 ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
