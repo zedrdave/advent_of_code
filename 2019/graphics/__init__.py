@@ -35,7 +35,7 @@ def asciiPrint(bitmap, transpose=False, reset=False, header=""):
     print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖"][int(i)] for i in line) for line in bitmap), flush=False)
     sys.stdout.flush()
 
-def saveAnimatedGIF(numTiles = 41, tileSize = 10, outputFile = 'animation.gif', freq = 1):
+def saveAnimatedGIF(numTiles = 41, tileSize = 10, outputFile = 'animation.gif', freq = 1, duration = 10):
     global frames
 
     print(f"Saving animation ({len(frames)} frames)…")
@@ -54,7 +54,7 @@ def saveAnimatedGIF(numTiles = 41, tileSize = 10, outputFile = 'animation.gif', 
         outputFile,
         save_all=True,
         append_images=images,
-        duration=10,
+        duration=duration,
         loop=0,
         optimize=True
     )

@@ -10,7 +10,7 @@ from ..graphics import snapshot, saveAnimatedGIF
 setVerbosity(False)
 
 # Options:
-printToScreen = False
+printToScreen = True
 saveAnimation = True
 
 instructions = loadCSVInput()
@@ -20,64 +20,71 @@ vm = VM(instructions)
 UNKNOWN = 0
 EMPTY = 1
 WALL = 2
+EXPLORE = 3
 OXYGEN = 5
 ROBOT = 6
 
 DIRS = [(0,-1),(0,1),(-1,0),(1,0)]
 move = lambda pos, dir: (pos[0]+dir[0], pos[1]+dir[1])
 
-def path_to(orig, dest, wallmap, prev_pos = None):
-    for dir_idx,dir in enumerate(DIRS):
+def path_to(orig, dest, prevPos = None):
+    path = None
+    for dirIdx,dir in enumerate(DIRS):
         neighbour = move(orig, dir)
-        if neighbour == prev_pos:
+        if neighbour == prevPos:
             continue
-        if neighbour == dest:
-            return [dir_idx]
-        if wallmap[neighbour] == EMPTY:
-            add_path = path_to(neighbour, dest, wallmap, prev_pos = orig)
-            if len(add_path):
-                return [dir_idx] + add_path
-    return []
+        if dest == neighbour:
+            return [dirIdx]
+        if wallmap[neighbour] == EMPTY or wallmap[neighbour] == OXYGEN:
+            newPath = path_to(neighbour, dest, prevPos = orig)
+            if newPath is not None and (path is None or len(newPath) < len(path)):
+                path = [dirIdx] + newPath
+    return path
 
-cur_pos = (0,0)
+# Part 1
+
+curPos = (0,0)
 wallmap = defaultdict(int)
-wallmap[cur_pos] = EMPTY
+wallmap[curPos] = EMPTY
 explore = [(1,0)]
 
+
 while len(explore) > 0:
-    next_dest = explore.pop()
-    next_path = path_to(cur_pos, next_dest, wallmap)
-    dprint(f"Cur pos: {cur_pos}\nNext dest: {next_dest}\nPath: {['NSWE'[d] for d in next_path]}")
-    for dir_idx in next_path:
-        vm.input = [dir_idx+1]
+    nextDest = explore.pop()
+    nextPath = path_to(curPos, nextDest)
+    dprint(f"Cur pos: {curPos}\nNext dest: {nextDest}\nPath: {['NSWE'[d] for d in nextPath]}")
+    assert wallmap[nextDest] == UNKNOWN
+    for dirIdx in nextPath:
+        vm.input = [dirIdx+1]
         status = next(vm.run())
-        next_pos = move(cur_pos, DIRS[dir_idx])
-        dprint(f"Moved: {'NSWE'[dir_idx]} -> {next_pos}({status})")
+        nextPos = move(curPos, DIRS[dirIdx])
+        dprint(f"Moved: {'NSWE'[dirIdx]} -> {nextPos}({status})")
+
+        explore = [p for p in explore if p != nextPos]
 
         if status == 0:
-            wallmap[next_pos] = WALL
+            wallmap[nextPos] = WALL
         else:
-            cur_pos = next_pos
-
-            if wallmap[cur_pos] == UNKNOWN:
-                explore += [p for p in [move(cur_pos, dir) for dir in DIRS] if wallmap[p] == UNKNOWN]
+            curPos = nextPos
+            if wallmap[curPos] == UNKNOWN:
+                explore += [p for p in [move(curPos, dir) for dir in DIRS] if wallmap[p] == UNKNOWN]
             if status == 2:
-                wallmap[cur_pos] = OXYGEN
-                path = path_to((0,0), cur_pos, wallmap)
-                dprint("Found oxygen at: ", cur_pos, " | path: ", path)
+                wallmap[curPos] = OXYGEN
+                path = path_to((0,0), curPos)
+                dprint("Found oxygen at: ", curPos, " | path: ", path)
                 print("Part 1 -", len(path))
             else:
-                wallmap[cur_pos] = EMPTY
+                wallmap[curPos] = EMPTY
 
-        snapshot(wallmap, printToScreen, saveAnimation, {cur_pos: ROBOT})
+        snapshot(wallmap, printToScreen, saveAnimation, {curPos: ROBOT, **{p:EXPLORE for p in explore}})
 
 # Part 2
 
 time = 0
-while time == 0 or len(empty_neighbours) > 0:
+while time == 0 or len(emptyNeighbours) > 0:
     oxy_pos = [p for p,s in wallmap.items() if s == OXYGEN]
-    empty_neighbours = [move(p,dir) for p in oxy_pos for dir in DIRS if wallmap[move(p,dir)] == EMPTY]
-    for p in empty_neighbours:
+    emptyNeighbours = [move(p,dir) for p in oxy_pos for dir in DIRS if wallmap[move(p,dir)] == EMPTY]
+    for p in emptyNeighbours:
         wallmap[p] = OXYGEN
     time += 1
     snapshot(wallmap, printToScreen, saveAnimation)
@@ -85,4 +92,4 @@ while time == 0 or len(empty_neighbours) > 0:
 print("Part 2: took ", time)
 
 if saveAnimation:
-    saveAnimatedGIF(freq=10)
+    saveAnimatedGIF(freq=2, duration=5)
