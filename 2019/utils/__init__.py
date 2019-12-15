@@ -54,7 +54,7 @@ def asciiPrint(bitmap, transpose=False, reset=False, header=""):
     if reset:
         print(chr(27) + "[2J", flush=False)
     print(header, flush=False)
-    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵"][int(i)] for i in line) for line in bitmap), flush=False)
+    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖"][int(i)] for i in line) for line in bitmap), flush=False)
     sys.stdout.flush()
 
 def getChar():
