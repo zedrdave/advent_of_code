@@ -179,3 +179,9 @@ Starting to get the hang of that "do not overcomplicate" thing: just as I was ab
 I *did* attempt a brute-force for Part 2, stopped after 20s… and implemented a quick bisection method, as any sane person would.
 
 **Today's lesson:** `O(log n)`, bitch.
+
+## 15
+
+Fairly linear solving. First built a (very dumb) function to recursively find the path between two locations, then moved everywhere, adding new (non-brick) neighbours to my exploration list, until there was nothing left to explore.
+
+![](https://i.imgur.com/FlwplzH.gif)
