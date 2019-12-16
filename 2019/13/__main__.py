@@ -82,7 +82,7 @@ while vm.is_running:
             if use_curses:
                 cursesOutput(screen, header=f"[Score: {score}]\n")
             else:
-                snapshot(screen, printToScreen, saveAnimation, reset=True, header=f"[Score: {score}]\n")
+                snapshot(screen, printToScreen or interactive, saveAnimation, reset=True, header=f"[Score: {score}]\n")
 
             if interactive:
                 ch = getChar()
@@ -105,7 +105,7 @@ if use_curses:
 print("Part 2 - Final score: ", score)
 
 if saveAnimation:
-    saveAnimatedGIF(freq=1, duration=5)
+    saveAnimatedGIF(tileSize = 15, duration=1)
 
 # if save_animation:
 #     print("Saving animation…")

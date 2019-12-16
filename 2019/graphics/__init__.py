@@ -35,19 +35,24 @@ def asciiPrint(bitmap, transpose=False, reset=False, header=""):
     print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖"][int(i)] for i in line) for line in bitmap), flush=False)
     sys.stdout.flush()
 
-def saveAnimatedGIF(numTiles = 41, tileSize = 10, outputFile = 'animation.gif', freq = 1, duration = 10):
+def saveAnimatedGIF(tileSize = 10, outputFile = 'animation.gif', freq = 1, duration = 10):
     global frames
+    if len(frames) == 0:
+        return
 
     print(f"Saving animation ({len(frames)} frames)…")
     tiles = [Image.open(f'2019/15/tiles/{i}.png').resize((tileSize,)*2) for i in range(7)]
 
+    dims = sparseToDense(frames[-1]).shape
+    minY = min(y for _,y in frames[-1])
+    minX = min(x for x,_ in frames[-1])
+
     def frameToImage(frame, i):
-        img = Image.new('RGBA', (numTiles*tileSize,)*2, 'black')
-        for (x,y),v in frame.items():
-            img.paste(tiles[v], ((y + numTiles//2 + 1)*tileSize, (x + numTiles//2 + 1)*tileSize))
-        global saved
+        img = Image.new('RGBA', (dims[0]*tileSize, dims[1]*tileSize), 'black')
+        for (y,x),v in frame.items():
+            img.paste(tiles[v], ((y - minY)*tileSize, (x - minX)*tileSize))
         print(f"saved: {i}/{len(frames)}", end="\r")
-        return img
+        return img.convert('P', palette=Image.ADAPTIVE)
 
     images = (frameToImage(f,i) for i,f in enumerate(frames) if i%freq == 0)
     next(images).save(
