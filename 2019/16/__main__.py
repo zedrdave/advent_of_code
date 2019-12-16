@@ -38,7 +38,7 @@ digits = [int(i) for i in digits] * 10000
 assert(len(digits) < 2*skip - 1)
 
 for phase in range(100):
-    # n first digits only affected by n first digits of checksum
+    # n first digits only affecting n first digits of checksum
     # and all pattern positions after `skip` are `1`:
     checksum = 0
     new_digits = []
