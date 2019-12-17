@@ -179,3 +179,30 @@ Starting to get the hang of that "do not overcomplicate" thing: just as I was ab
 I *did* attempt a brute-force for Part 2, stopped after 20s… and implemented a quick bisection method, as any sane person would.
 
 **Today's lesson:** `O(log n)`, bitch.
+
+## 15
+
+Fairly linear solving. First built a (very dumb) function to recursively find the path between two locations, then moved everywhere, adding new (non-brick) neighbours to my exploration list, until there was nothing left to explore.
+
+![](https://i.imgur.com/FlwplzH.gif)
+
+While cleaning up after submission, I realised that my path-finding function was a *little* too dumb (could be easily made to return a shorter, if not the *shortest* path), and the exploration list wasn't updated aggressively enough (leading to locations being explored twice).
+
+Playing around with printing and saving also uncovered some sneaky issues with the use of `defaultdict` (never know when new 'unknown' locations will be added, due to being accessed, especially if you deep copy).
+
+**Today's lesson:** Deep-copying on-demand sparse structures is not a great idea…
+
+## 16
+
+Back to seemingly-untractable riddles that rely on finding a "trick" to simplify the problem.
+
+1. "Brute-forced" Part 1, realised the same code would take hours on Part 2, and started looking for the "trick".
+2. Laboriously implemented incremental checksums, where only new pattern positions got added/subtracted (taking advantage of the big overlap between patterns from one line to the next) -> made example strings computable in ~5 mins, would be hours for real input
+3. Looking at the patterns for each line, noticed that `n` first digits of checksum where only affected by `n` first digits of inital string -> made real input computable in a few minutes
+4. After submission, looked more methodically at the patterns. My initial hope was to find more sparsity in the matrix of patterns over all lines (eg large ranges of columns with value 0 for all lines), that could then be skipped over… Which made me notice the real trick: for the given input size and offset, all pattern positions are `1`, and computing a phase merely requires a cumulative sum on the non-skipped digits…
+
+Somewhere between 2 and 3, I briefly considered switching from Python to C, knowing it would likely solve my tractability issue, but decided to focus on finding the trick I knew existed.
+
+Somewhere between 3 and 4, it started becoming clear that FFT (the Fourier kind) might be the way to go. A fact I blissfully ignored, as I would rather spend 2h messing with patterns, than implement FFT…
+
+**Today's lesson:** Visualise your input and look for patterns…
