@@ -17,38 +17,46 @@ saveAnimation = True
 
 # Part 1
 
-if not interactive: # Skip in interactive mode
-    instructions = loadCSVInput()
-    vm = VM(instructions)
-    screen=defaultdict(int)
-
-    while vm.is_running:
-        try:
-            for x,y,id in zip(*[iter(vm.run())]*3):
-                screen[x,y] = id
-        except StopIteration:
-            break
-
-    screen = sparseToDense(screen)
-    asciiPrint(screen, transpose=True)
-    print("Part 1 - total number of block tiles: ", sum(sum(screen == 2)))
+# if not interactive: # Skip in interactive mode
+#     instructions = loadCSVInput()
+#     vm = VM(instructions)
+#     screen=defaultdict(int)
+#
+#     while vm.is_running:
+#         try:
+#             for x,y,id in zip(*[iter(vm.run())]*3):
+#                 screen[x,y] = id
+#         except StopIteration:
+#             break
+#
+#     screen = sparseToDense(screen)
+#     asciiPrint(screen, transpose=True)
+#     print("Part 1 - total number of block tiles: ", sum(sum(screen == 2)))
 
 
 # Part 2
 
-def look_ahead(vm):
+def look_ahead(vm, moves = [0], bounces = 0):
     temp_vm = copy.deepcopy(vm)
-    ball_x = 0
+    ball_x = -1
     ball_moves = 1
-    temp_vm.input = [0]
+    bricks = 0
+    temp_vm.input = list(moves)
     for x,y,id in zip(*[iter(temp_vm.run())]*3):
-        temp_vm.input = [0]
-        if id == 4:
+        temp_vm.input += [0]
+        if x == -1 and y == 0 and id > 0: # hackish way to know a brick was hit
+            bricks += 1
+        elif id == 4:
             ball_moves += 1
             if y == 17:
-                ball_x = x
-                break
-    return (ball_moves, ball_x)
+                if bounces:
+                    bounces -= 1
+                else:
+                    ball_x = x
+                    break
+
+
+    return (ball_moves, ball_x, bricks)
 
 # Let's begin:
 
@@ -65,6 +73,14 @@ if use_curses:
 
 key_mapping = {44:-1, 46:1, 32:0}
 
+
+# def recurSolve(thisVm, movesSoFar):
+#     ball_moves, ball_x, _ = look_ahead(thisVm)
+#
+#     return movesSoFar + ball_moves
+
+
+
 while vm.is_running:
     try:
         x, y, id = next(vm.run()), next(vm.run()), next(vm.run())
@@ -78,7 +94,6 @@ while vm.is_running:
         print("###################\n     YOU WIN!\n\n Final Score:", score, "\n###################\n")
         break
     except NeedInputException:
-            game_started = True
             if use_curses:
                 cursesOutput(screen, header=f"[Score: {score}]\n")
             else:
@@ -92,12 +107,28 @@ while vm.is_running:
                 else:
                     break
             else:
-                paddle = [x for x,v in screen.items() if v == 3][0][0]
-                num_moves, next_ball_x = look_ahead(vm)
-                dprint(f"Paddle: {paddle} | Ball (in {num_moves}): {next_ball_x}")
-                dist = abs(paddle-next_ball_x)
-                vm.input = [cmp(next_ball_x, paddle)]*dist + [0]*(num_moves-dist)
+                paddle_x = [x for x,v in screen.items() if v == 3][0][0]
+                num_moves, next_ball_x, _ = look_ahead(vm)
+                dprint(f"Paddle: {paddle_x} | Ball (in {num_moves}): {next_ball_x} | dist: {abs(paddle_x-next_ball_x)}")
+                best_moves = None
+                if game_started:
+                    best_bricks = 0
+                    for target in [next_ball_x,next_ball_x-1,next_ball_x+1]:
+                        dist = abs(paddle_x-target)
+                        moves = ([cmp(target, paddle_x)] * dist + [0]*(num_moves-dist))[:num_moves]
+                        nn_moves, nn_ball_x, bricks = look_ahead(vm, moves=moves, bounces=1)
+                        if nn_ball_x >= 0 and bricks > best_bricks and (nn_moves - num_moves) >= abs(nn_ball_x-target):
+                            best_bricks = bricks
+                            best_moves  = moves
+                if best_moves is None:
+                    dist = abs(paddle_x-next_ball_x)
+                    best_moves = [cmp(next_ball_x, paddle_x)] * dist + [0]*(num_moves-dist)
+
+                vm.input = best_moves
                 dprint("Next moves: ", vm.input)
+
+            game_started = True
+
 
 if use_curses:
     cleanCurses()
@@ -106,17 +137,3 @@ print("Part 2 - Final score: ", score)
 
 if saveAnimation:
     saveAnimatedGIF(tileSize = 15, duration=1)
-
-# if save_animation:
-#     print("Saving animation…")
-#     from PIL import Image
-#     palette = [0, 0, 0,  #black
-#         211, 223, 223, #white
-#         229, 39,  39,  #red
-#         244, 214, 17,  #yellow
-#         30, 30, 255,  #blue
-#     ] + [0]*(768 - 5*3)
-#     palette = palette + [0]*(768-len(palette))
-#     rescale = lambda img: img.resize((img.size[0]*15,img.size[1]*15))
-#     images = (rescale(Image.fromarray(sparseToDense(frame).transpose().astype('uint8'), 'P')) for frame in frames)
-#     next(images).save('animation.gif', save_all=True, append_images=images, duration=20, loop=0, palette=palette, optimize=True)
