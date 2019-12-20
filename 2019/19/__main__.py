@@ -1,14 +1,10 @@
-import sys
-import copy
-from collections import defaultdict
+# import copy
 import numpy as np
-import string
-import itertools
 import math
 
 from ..utils import loadCSVInput, dprint, setVerbosity, inputFile
+from ..intcode.VM import VM
 
-from ..intcode.VM import VM, NeedInputException
 
 arr2str = lambda a: '\n'.join([''.join([str(c) for c in line]) for line in a])
 

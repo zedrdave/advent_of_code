@@ -6,14 +6,15 @@ import string
 import itertools
 
 from ..utils import loadCSVInput, dprint, setVerbosity, inputFile
-# from ..graphics import snapshot, saveAnimatedGIF
+from ..graphics import snapshot, saveAnimatedGIF
 
 import networkx as nx
 
 # Debug:
-# setVerbosity(False)
+setVerbosity(False)
 
 with open(inputFile()) as f:
+# with open('2019/18/input.txt') as f:
     wallmap = f.read()
 
 arr2str = lambda a: '\n'.join([''.join([str(c) for c in line]) for line in a])
@@ -58,15 +59,13 @@ DIRS = [(0,-1),(0,1),(-1,0),(1,0)]
 wallmap = np.array([[*l] for l in wallmap.split()])
 printmap(wallmap)
 
+
 # Part 1:
 # wallmaps = [wallmap]
 
 # Part 2:
 ctr = np.array(wallmap.shape)//2
-
-replaceMap = """@#@
-###
-@#@"""
+replaceMap = "@#@\n###\n@#@"
 
 wallmap[(ctr[0]-1):(ctr[0]+2),(ctr[1]-1):(ctr[1]+2)] = np.array([[*l] for l in replaceMap.split()])
 
@@ -76,8 +75,8 @@ for w in wallmaps:
     print("\n")
     printmap(w)
     print("\n")
-# End part 2
 
+# End part 2
 
 def numpyToGraph(wallmap):
     G = nx.Graph()
@@ -99,7 +98,6 @@ allKeysFor = lambda wallmap: set(c for c in string.ascii_lowercase if len(np.arg
 def pathsFor(G, allKeys, wallmap):
     allKeysInMap = allKeysFor(wallmap)
     allDoors = set(c.upper() for keys in allKeys for c in keys)
-    # print("Doors: ", allDoors)
 
     betweenKeys = {}
     for k1,k2 in itertools.product(['@'] + list(allKeysInMap),list(allKeysInMap)):
@@ -119,32 +117,89 @@ allBetweenKeys = [pathsFor(G, allKeys, wallmap) for G,wallmap in zip(allGs, wall
 print("Got all paths…")
 print(allBetweenKeys)
 
-bestPathLen = None
 explored = {}
+# bestPathLen = None
+bestPathLen = 1733 # DEBUG CHEAT
 
 def recurExplore(allKeys, allBetweenKeys, pathLen = 0, curPos = '@'*len(allKeys), keys = frozenset()):
-    global bestPathLen, explored
+    global explored, bestPathLen
     # print(curPos)
     if bestPathLen is not None and pathLen >= bestPathLen:
-        return
+        return False
     if (curPos, keys) in explored and explored[(curPos, keys)] <= pathLen:
-        return
+        return False
     explored[(curPos, keys)] = pathLen
     if len(keys) == sum(len(a) for a in allKeys):
         bestPathLen = pathLen
         print("Got best length so far:", pathLen)
-        return
+        return [curPos]
     # print("Got keys: ", keys)
+    bestPath = False
     for i,allKeysForSubgraph in enumerate(allKeys):
         for k in allKeysForSubgraph - keys:
             for pathLenBetween, doorsBetween in allBetweenKeys[i][ (curPos[i],k) ]:
                 # print(f"submap: {i}, curPos: {curPos[i]}, target: {k}, path len: {pathLenBetween}, doors: {doorsBetween}")
                 if doorsBetween - keys:
                     continue
-                recurExplore(allKeys, allBetweenKeys,
+                ret = recurExplore(allKeys, allBetweenKeys,
                     pathLen = pathLen + pathLenBetween,
                     curPos = curPos[:i] + k + curPos[i+1:],
-                    keys = keys | set(k)
+                    keys = keys | set(k),
                 )
+                if ret:
+                    # print(ret)
+                    bestPath = [curPos] + ret
+    return bestPath
 
-recurExplore(allKeys, allBetweenKeys)
+
+keyPaths = recurExplore(allKeys, allBetweenKeys)
+
+print(keyPaths)
+
+# Visualisation
+
+from itertools import zip_longest
+
+EMPTY = 1
+DRONE = 6
+OPEN_DOOR = 9
+
+frame = copy.deepcopy(wallmap)
+frame[frame == '#'] = 2
+frame[frame == '.'] = EMPTY
+frame[frame == '@'] = DRONE
+for c in string.ascii_lowercase:
+    frame[frame == c] = 7
+for c in string.ascii_uppercase:
+    frame[frame == c] = 8
+
+G = numpyToGraph(wallmap)
+
+curPos = None
+initPos = [tuple(ctr+adj) for adj in [(-1,-1),(1,-1),(-1,1),(1,1)]]
+
+for step in keyPaths:
+    print(step)
+    stepPos = [initPos[i] if c == '@' else where(c, wallmap) for i,c in enumerate(step)]
+    print(stepPos)
+    if curPos:
+        print(curPos, stepPos)
+        paths = [next(nx.shortest_simple_paths(G, f, t)) for f,t in zip(curPos,stepPos)]
+        print(paths)
+        for nextPos in zip_longest(*paths, fillvalue=None):
+            for p in curPos:
+                frame[p] = EMPTY
+            curPos = [n if n else p for p,n in zip(curPos,nextPos)]
+            print(curPos)
+            for p in curPos:
+                if wallmap[p] in string.ascii_lowercase:
+                    print("Opening: ", wallmap[p].upper())
+                    frame[where(wallmap[p].upper(), wallmap)] = OPEN_DOOR
+                frame[p] = DRONE
+            snapshot(frame, printToScreen = True, saveAnimation = True, transpose = False)
+        # print(paths)
+        break
+    else:
+        curPos = stepPos
+
+saveAnimatedGIF(backgroundColour='black', skipTile=1)
