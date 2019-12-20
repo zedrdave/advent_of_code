@@ -1,104 +1,69 @@
-# import sys
 import copy
-from collections import defaultdict
-import numpy as np
 import string
-import itertools
+import networkx as nx
+import numpy as np
 
-# from ..utils import loadCSVInput, dprint, setVerbosity, inputFile
+from ..utils import dprint, setVerbosity, inputFile
 # from ..graphics import snapshot, saveAnimatedGIF
 
-import networkx as nx
-
 arr2str = lambda a: '\n'.join([''.join([str(c) for c in line]) for line in a])
-printmap = lambda m: print(arr2str(m))
+isInMap = lambda n, w, b = 0: all(0+b <= n[i] < w.shape[i]-b for i in (0,1))
+isEmpty = lambda n,w: isInMap(n,w) and w[n[0],n[1]] == '.'
+move = lambda n,d, a = 1: (n[0]+ a*d[0], n[1]+ a*d[1], *n[2:])
 
-DIRS = [(0,-1),(0,1),(-1,0),(1,0)]
+DIRS = [(0,1),(1,0),(0,-1),(-1,0)]
 
+setVerbosity(0)
 
-# wallmap = """         A#########
-#          A#########
-#   #######.#########
-#   #######.........#
-#   #######.#######.#
-#   #######.#######.#
-#   #######.#######.#
-#   #####  B    ###.#
-# BC...##  C    ###.#
-#   ##.##       ###.#
-#   ##...DE  F  ###.#
-#   #####    G  ###.#
-#   #########.#####.#
-# DE..#######...###.#
-#   #.#########.###.#
-# FG..#########.....#
-#   ###########.#####
-#              Z#####
-#              Z#####"""
-
-# with open(inputFile()) as f:
-with open('2019/20/input_test.txt') as f:
+with open(inputFile()) as f:
     wallmap = f.read()
 
-# for l in wallmap.strip('\n').split('\n'):
-#     print(len(l))
-
 wallmap = np.array([[*l] for l in wallmap.strip('\n').split('\n')])
-print(wallmap)
-printmap(wallmap)
+print(arr2str(wallmap))
 
+def exploreWallmap(wallmap, totLevels = 1):
+    portals = [{},{}]
+    for idx in np.ndindex(wallmap.shape):
+        C1 = wallmap[idx]
+        if C1 not in string.ascii_uppercase:
+            continue
+        for d in DIRS[:2]:
+            if not isInMap(move(idx, d),wallmap):
+                continue
+            C2 = wallmap[move(idx, d)]
+            if C2 not in string.ascii_uppercase:
+                continue
+            pos = move(idx, d, -1) if isEmpty(move(idx, d, -1), wallmap) else move(idx, d, 2)
+            portals[isInMap(pos, wallmap, b = 4)][C1+C2] = pos
 
-def numpyToGraph(wallmap):
-    G = nx.DiGraph()
-    nodes = list(itertools.product(range(1,wallmap.shape[0]-1),range(1,wallmap.shape[1]-1)))
-    G.add_nodes_from(nodes)
-    for di,dj in DIRS:
-        for i,j in nodes:
-            if 0 <= i+di < wallmap.shape[0] and 0 <= j+dj < wallmap.shape[1]:
-                G.add_edge((i+di,j+dj),(i,j), weight = 1)
-                G.add_edge((i,j),(i+di,j+dj), weight = 1)
-    G.remove_nodes_from(tuple(x) for x in np.argwhere(wallmap != '.'))
-    return G
+    G = nx.Graph()
+    for level in range(totLevels):
+        nodes = [(*idx, level) for idx in np.ndindex(wallmap.shape)]
+        G.add_nodes_from(nodes)
+        G.add_edges_from((n, move(n, d)) for d in DIRS for n in nodes if isInMap(move(n, d), wallmap))
+        G.remove_nodes_from((*x, level) for x in np.argwhere(wallmap != '.'))
 
-G = numpyToGraph(wallmap)
+        for k, inner in portals[1].items():
+            if totLevels > 1:
+                G.add_edge((*inner, level), (*portals[0][k], level+1))
+                G.add_edge((*portals[0][k], level), (*inner, level-1))
+            else:
+                G.add_edge((*inner, 0), (*portals[0][k], 0))
+                # G.add_edge((*portals[0][k], 0), (*inner, 0))
 
-isInMap = lambda i,j,w: 0 <= i < w.shape[0] and 0 <= j < w.shape[1]
-isEmpty = lambda i,j,w: isInMap(i,j,w) and w[i,j] == '.'
-isCentral = lambda i,j,w: 4 <= i < w.shape[0]-4 and 4 <= j < w.shape[1]-4
+    start = (*portals[0]['AA'], 0)
+    goal = (*portals[0]['ZZ'], 0)
 
-tunnels = {}
-for i,j in np.ndindex(wallmap.shape):
-    C1 = wallmap[i,j]
-    if C1 in string.ascii_uppercase:
-        for di,dj in [(0,1),(1,0)]:
-            if isInMap(i+di,j+dj,wallmap):
-                C2 = wallmap[i+di, j+dj]
-                if C2 in string.ascii_uppercase:
-                    if isEmpty(i+2*di,j+2*dj,wallmap):
-                        pos = (i+2*di,j+2*dj)
-                    else:
-                        assert isEmpty(i-di,j-dj,wallmap)
-                        pos = (i-di,j-dj)
-                    print(C1, C2, pos)
-                    if C1+C2 in tunnels:
-                        print("Adding tunnel:", tunnels[C1+C2],pos)
-                        if isCentral(*pos, wallmap):
-                            assert not isCentral(*tunnels[C1+C2], wallmap)
-                            G.add_edge(tunnels[C1+C2], pos, weight = 10000)
-                            G.add_edge(pos, tunnels[C1+C2], weight = -10000)
-                        else:
-                            assert isCentral(*tunnels[C1+C2], wallmap)
-                            G.add_edge(tunnels[C1+C2], pos, weight = -10000)
-                            G.add_edge(pos, tunnels[C1+C2], weight = 10000)
-                    else:
-                        tunnels[C1+C2] = pos
+    return next(nx.shortest_simple_paths(G, start, goal))
 
-start = tunnels['AA']
-goal = tunnels['ZZ']
+# Part 1
 
-p = next(nx.shortest_simple_paths(G, start, goal, weight = 'weight'))
-print(p)
-print(len(p) - 1)
+p = exploreWallmap(wallmap, 1)
+dprint(p)
+print("Part 1: ", len(p) - 1)
 
+# Part 2
 
-# x > 678
+p = exploreWallmap(wallmap, 40)
+dprint(p)
+print("Part 2: ", len(p) - 1)
