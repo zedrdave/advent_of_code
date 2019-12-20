@@ -1,6 +1,7 @@
 import sys
 import copy
 import os
+import string
 import numpy as np
 from PIL import Image
 from collections import defaultdict
@@ -34,7 +35,10 @@ def asciiPrint(bitmap, transpose=False, reset=False, header=""):
     if reset:
         print(chr(27) + "[2J", flush=False)
     print(header, flush=False)
-    print("\n".join(''.join([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖",u"🔑",u"🚪", u"🟩"][int(i)] for i in line) for line in bitmap), flush=False)
+    tiles = {str(i):v for i,v in enumerate([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖",u"🔑",u"🚪", u"🟩"])}
+    tiles.update({' ': u"⬛️", '.': u"⬜️", '#': u"🟥"})
+    tiles.update({c:c+' ' for c in string.ascii_uppercase})
+    print("\n".join(''.join(tiles[i] for i in line) for line in bitmap), flush=False)
     sys.stdout.flush()
 
 def saveAnimatedGIF(tileSize = 10, outputFile = 'animation.gif', freq = 1, duration = 10, backgroundColour = 'black', skipTile = None):
@@ -45,8 +49,9 @@ def saveAnimatedGIF(tileSize = 10, outputFile = 'animation.gif', freq = 1, durat
     tilePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tiles')
 
     print(f"Saving animation ({len(frames)} frames)…")
-    tiles = [Image.open(f'{tilePath}/{i}.png', 'r').resize((tileSize,)*2) for i in range(10)]
-
+    tiles = {str(i):Image.open(f'{tilePath}/{i}.png', 'r').resize((tileSize,)*2) for i in range(10)}
+    tiles.update({c:Image.open(f'{tilePath}/{i}.png', 'r').resize((tileSize,)*2) for c,i in {'#':2,' ':0, '.':1}.items()})
+    tiles.update({c:Image.open(f'{tilePath}/0.png', 'r').resize((tileSize,)*2) for c in string.ascii_uppercase})
     if type(frames[0]) is defaultdict:
         dims = sparseToDense(frames[-1]).shape
         minY = min(y for _,y in frames[-1])
@@ -64,10 +69,10 @@ def saveAnimatedGIF(tileSize = 10, outputFile = 'animation.gif', freq = 1, durat
         dims = frames[0].shape
         def frameToImage(frame, i):
             img = Image.new('RGBA', (dims[0]*tileSize, dims[1]*tileSize), backgroundColour)
-            for (y,x) in np.ndindex(frame.shape):
-                if int(frame[x,y]) == skipTile: continue
-                tile = tiles[int(frame[x,y])]
-                img.paste(tile, (y*tileSize, x*tileSize), mask=tile)
+            for (x,y) in np.ndindex(dims):
+                if skipTile and frame[x,y] == skipTile: continue
+                tile = tiles[frame[x,y]]
+                img.paste(tile, (x*tileSize, y*tileSize), mask=tile)
             print(f"saved: {i}/{len(frames)}", end="\r")
             return img.convert('P', palette=Image.ADAPTIVE)
 

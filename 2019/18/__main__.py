@@ -14,7 +14,6 @@ import networkx as nx
 setVerbosity(False)
 
 with open(inputFile()) as f:
-# with open('2019/18/input.txt') as f:
     wallmap = f.read()
 
 arr2str = lambda a: '\n'.join([''.join([str(c) for c in line]) for line in a])
@@ -115,11 +114,10 @@ allKeys = [allKeysFor(w) for w in wallmaps]
 allBetweenKeys = [pathsFor(G, allKeys, wallmap) for G,wallmap in zip(allGs, wallmaps)]
 
 print("Got all paths…")
-print(allBetweenKeys)
+dprint(allBetweenKeys)
 
 explored = {}
-# bestPathLen = None
-bestPathLen = 1733 # DEBUG CHEAT
+bestPathLen = None
 
 def recurExplore(allKeys, allBetweenKeys, pathLen = 0, curPos = '@'*len(allKeys), keys = frozenset()):
     global explored, bestPathLen
@@ -154,52 +152,61 @@ def recurExplore(allKeys, allBetweenKeys, pathLen = 0, curPos = '@'*len(allKeys)
 
 keyPaths = recurExplore(allKeys, allBetweenKeys)
 
+# keyPaths = ['@@@@', '@s@@', '@d@@', '@de@', '@dn@', '@dnu', '@dno', '@dnx', 'qdnx', 'bdnx', 'fdnx', 'fdnm', 'fdni', 'fdnw', 'ftnw', 'fynw', 'fync', 'fyzc', 'fyzk', 'fyrk', 'fygk', 'fyak', 'fyjk', 'fyhk', 'fylk', 'fypk', 'fyvk']
+
 print(keyPaths)
 
 # Visualisation
 
-from itertools import zip_longest
-
-EMPTY = 1
-DRONE = 6
-OPEN_DOOR = 9
+EMPTY = '1'
+WALL = '0'
+DRONE = '6'
+OPEN_DOOR = '9'
+CLOSED_DOOR = '2'
+KEY = '7'
 
 frame = copy.deepcopy(wallmap)
-frame[frame == '#'] = 2
+frame[frame == '#'] = WALL
 frame[frame == '.'] = EMPTY
 frame[frame == '@'] = DRONE
 for c in string.ascii_lowercase:
-    frame[frame == c] = 7
+    frame[frame == c] = KEY
 for c in string.ascii_uppercase:
-    frame[frame == c] = 8
+    frame[frame == c] = CLOSED_DOOR
+
+snapshot(frame, printToScreen = True, saveAnimation = True, transpose = False)
 
 G = numpyToGraph(wallmap)
-
-curPos = None
 initPos = [tuple(ctr+adj) for adj in [(-1,-1),(1,-1),(-1,1),(1,1)]]
 
-for step in keyPaths:
-    print(step)
-    stepPos = [initPos[i] if c == '@' else where(c, wallmap) for i,c in enumerate(step)]
-    print(stepPos)
-    if curPos:
-        print(curPos, stepPos)
-        paths = [next(nx.shortest_simple_paths(G, f, t)) for f,t in zip(curPos,stepPos)]
-        print(paths)
-        for nextPos in zip_longest(*paths, fillvalue=None):
-            for p in curPos:
-                frame[p] = EMPTY
-            curPos = [n if n else p for p,n in zip(curPos,nextPos)]
-            print(curPos)
-            for p in curPos:
-                if wallmap[p] in string.ascii_lowercase:
-                    print("Opening: ", wallmap[p].upper())
-                    frame[where(wallmap[p].upper(), wallmap)] = OPEN_DOOR
-                frame[p] = DRONE
-            snapshot(frame, printToScreen = True, saveAnimation = True, transpose = False)
-        # print(paths)
-        break
-    else:
-        curPos = stepPos
+paths = []
+for i in range(4):
+    stops = [initPos[i] if k[i] == '@' else where(k[i], wallmap) for k in keyPaths]
+    paths += [[p for f,t in zip(stops[:-1],stops[1:]) for p in next(nx.shortest_simple_paths(G, f, t))]]
 
-saveAnimatedGIF(backgroundColour='black', skipTile=1)
+# print(len(paths))
+# print([len(p) for p in paths])
+
+lastPos = [None] * 4
+while any(len(p) for p in paths):
+    updates = {}
+    for i in range(4):
+        if not len(paths[i]):
+            continue
+        c = wallmap[paths[i][0]]
+        if c in string.ascii_lowercase:
+            updates[where(c.upper(), wallmap)] = OPEN_DOOR
+        if frame[paths[i][0]] == CLOSED_DOOR:
+            continue
+        p = paths[i].pop(0)
+        if lastPos[i]:
+            updates[lastPos[i]] = EMPTY
+        updates[p] = DRONE
+        lastPos[i] = p
+    for p,v in updates.items():
+        frame[p] = v
+    snapshot(frame, printToScreen = False, saveAnimation = True, transpose = False)
+
+for _ in range(10):
+    snapshot(frame, printToScreen = False, saveAnimation = True, transpose = False)
+saveAnimatedGIF(backgroundColour=(217,217,217), duration = 70)

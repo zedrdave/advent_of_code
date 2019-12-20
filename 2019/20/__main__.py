@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 
 from ..utils import dprint, setVerbosity, inputFile
-# from ..graphics import snapshot, saveAnimatedGIF
+from ..graphics import snapshot, saveAnimatedGIF
 
 arr2str = lambda a: '\n'.join([''.join([str(c) for c in line]) for line in a])
 isInMap = lambda n, w, b = 0: all(0+b <= n[i] < w.shape[i]-b for i in (0,1))
@@ -54,16 +54,20 @@ def exploreWallmap(wallmap, totLevels = 1):
     start = (*portals[0]['AA'], 0)
     goal = (*portals[0]['ZZ'], 0)
 
-    return next(nx.shortest_simple_paths(G, start, goal))
+    return next(nx.shortest_simple_paths(G, start, goal)), G, portals
 
 # Part 1
 
-p = exploreWallmap(wallmap, 1)
+p, G, portals = exploreWallmap(wallmap, 1)
 dprint(p)
 print("Part 1: ", len(p) - 1)
 
+frame = copy.deepcopy(wallmap)
+
+snapshot(frame, printToScreen = False, saveAnimation = True)
+saveAnimatedGIF(outputFile = 'animation.gif', backgroundColour = 'white')
 # Part 2
 
-p = exploreWallmap(wallmap, 40)
-dprint(p)
-print("Part 2: ", len(p) - 1)
+# p, G, portals = exploreWallmap(wallmap, 40)
+# dprint(p)
+# print("Part 2: ", len(p) - 1)
