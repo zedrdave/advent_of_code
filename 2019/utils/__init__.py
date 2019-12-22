@@ -4,7 +4,6 @@ import termios
 import sys
 from collections import defaultdict
 import numpy as np
-import scipy.sparse
 
 cmp = lambda a,b: (a > b) - (a < b)
 
@@ -27,10 +26,13 @@ def isVerbose():
     return int(os.environ.get('VERBOSE', 0)) > 0
 
 def dprint(*pargs, **kwargs):
-    if isVerbose():
-        print(*pargs, **kwargs)
+    pass
+    # if isVerbose():
+    #     print(*pargs, **kwargs)
 
 def sparseToDense(bitmap):
+    # import scipy.sparse
+
     items = list(bitmap.items())
     vs = [v for (i,j), v in items]
     ii = [i for (i,j), v in items]
@@ -39,7 +41,12 @@ def sparseToDense(bitmap):
     jj = [j for (i,j), v in items]
     min_jj = min(jj)
     jj = [i-min_jj for i in jj] # avoid negative indices
-    return scipy.sparse.csr_matrix((vs, (ii, jj))).toarray()
+    # Todo: load better
+    arr = np.zeros((max(ii)+1,max(jj)+1), 'int8')
+    for i,j,v in zip(ii,jj,vs):
+        arr[i][j] = v
+    return arr
+    # return scipy.sparse.csr_matrix((vs, (ii, jj))).toarray()
 
 
 def getChar():

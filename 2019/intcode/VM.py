@@ -90,17 +90,19 @@ class VM:
         return (self.mem[self.IP] // (10**(n+1))) %10
 
     def param(self, n):
-        if self.mode(n) == 2:
+        mode = self.mode(n)
+        if mode == 2:
             return self.mem[self.RB+self.mem[self.IP+n]]
-        elif self.mode(n) == 1:
+        elif mode == 1:
             return self.mem[self.IP+n]
         else:
             return self.mem[self.mem[self.IP+n]]
 
     def set_param(self, n, val):
-        if self.mode(n) == 2:
+        mode = self.mode(n)
+        if mode == 2:
             self.mem[self.RB+self.mem[self.IP+n]] = val
-        elif self.mode(n) == 1:
+        elif mode == 1:
             self.mem[self.IP+n] = val
         else:
             self.mem[self.mem[self.IP+n]] = val

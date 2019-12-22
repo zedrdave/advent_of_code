@@ -36,6 +36,7 @@ def asciiPrint(bitmap, transpose=False, reset=False, header=""):
         print(chr(27) + "[2J", flush=False)
     print(header, flush=False)
     tiles = {str(i):v for i,v in enumerate([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖",u"🔑",u"🚪", u"🟩"])}
+    tiles.update({i:v for i,v in enumerate([u"⬛️",u"⬜️",u"🟥",u"🟨", u"🔵",u"🟦",u"🤖",u"🔑",u"🚪", u"🟩"])})
     tiles.update({' ': u"⬛️", '.': u"⬜️", '#': u"🟥"})
     tiles.update({c:c+' ' for c in string.ascii_uppercase})
     print("\n".join(''.join(tiles[i] for i in line) for line in bitmap), flush=False)
@@ -50,6 +51,7 @@ def saveAnimatedGIF(tileSize = 10, outputFile = 'animation.gif', freq = 1, durat
 
     print(f"Saving animation ({len(frames)} frames)…")
     tiles = {str(i):Image.open(f'{tilePath}/{i}.png', 'r').resize((tileSize,)*2) for i in range(10)}
+    tiles.update({i:Image.open(f'{tilePath}/{i}.png', 'r').resize((tileSize,)*2) for i in range(10)})
     tiles.update({c:Image.open(f'{tilePath}/{i}.png', 'r').resize((tileSize,)*2) for c,i in {'#':2,' ':0, '.':1}.items()})
     tiles.update({c:Image.open(f'{tilePath}/0.png', 'r').resize((tileSize,)*2) for c in string.ascii_uppercase})
     if type(frames[0]) is defaultdict:

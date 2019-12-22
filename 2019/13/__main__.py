@@ -17,21 +17,21 @@ saveAnimation = True
 
 # Part 1
 
-# if not interactive: # Skip in interactive mode
-#     instructions = loadCSVInput()
-#     vm = VM(instructions)
-#     screen=defaultdict(int)
-#
-#     while vm.is_running:
-#         try:
-#             for x,y,id in zip(*[iter(vm.run())]*3):
-#                 screen[x,y] = id
-#         except StopIteration:
-#             break
-#
-#     screen = sparseToDense(screen)
-#     asciiPrint(screen, transpose=True)
-#     print("Part 1 - total number of block tiles: ", sum(sum(screen == 2)))
+if not interactive: # Skip in interactive mode
+    instructions = loadCSVInput()
+    vm = VM(instructions)
+    screen=defaultdict(int)
+
+    while vm.is_running:
+        try:
+            for x,y,id in zip(*[iter(vm.run())]*3):
+                screen[x,y] = id
+        except StopIteration:
+            break
+
+    screen = sparseToDense(screen)
+    asciiPrint(screen, transpose=True)
+    print("Part 1 - total number of block tiles: ", sum(sum(screen == 2)))
 
 
 # Part 2
