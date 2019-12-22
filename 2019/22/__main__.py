@@ -157,8 +157,8 @@ print("a,b:", a,b)
 r = b / (1-a)
 
 
-n = 100000
-print( math.ceil(
+n = 7
+print( (
     modMult(pow(a,n,deckSize), res1, deckSize)
      + ((pow(a, n) * b // (a-1)) % deckSize)
      +  r
