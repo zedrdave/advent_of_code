@@ -26,9 +26,8 @@ def isVerbose():
     return int(os.environ.get('VERBOSE', 0)) > 0
 
 def dprint(*pargs, **kwargs):
-    pass
-    # if isVerbose():
-    #     print(*pargs, **kwargs)
+    if isVerbose():
+        print(*pargs, **kwargs)
 
 def sparseToDense(bitmap):
     # import scipy.sparse

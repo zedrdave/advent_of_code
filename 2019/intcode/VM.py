@@ -23,13 +23,13 @@ class NeedInputException(Exception):
     pass
 
 class VM:
-    def __init__(self, program, phase = None):
+    def __init__(self, program, input = [], phase = None):
         self.mem = collections.defaultdict(int)
         for i,d in enumerate(program):
             self.mem[i] = d
         self.RB = 0
         self.IP = 0
-        self.input = []
+        self.input = input
         if phase:
             self.set_param(1, phase)
             self.IP += 2
@@ -77,7 +77,7 @@ class VM:
                 self.IP += 2
             else: # op_err
                 dprint(f"Unknown opcode: {self.mem[self.IP]} ")
-                sys.exit(-1)
+                raise(Exception("Unknown opcode"))
 
         dprint("[HALT]\n")
         # return None
