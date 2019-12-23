@@ -11,8 +11,8 @@ def inputFile(file = 'input.txt'):
     import __main__
     return os.path.join(os.path.dirname(os.path.abspath(__main__.__file__)), file)
 
-def loadCSVInput():
-    with open(inputFile()) as f:
+def loadCSVInput(file = 'input.txt'):
+    with open(inputFile(file)) as f:
         return [int(i.strip()) for i in f.read().split(',')]
 
 def loadXYZInput():

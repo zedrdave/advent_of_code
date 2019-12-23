@@ -18,7 +18,7 @@ saveAnimation = True
 # Part 1
 
 if not interactive: # Skip in interactive mode
-    instructions = loadCSVInput()
+    instructions = loadCSVInput('input_harold.txt')
     vm = VM(instructions)
     screen=defaultdict(int)
 
@@ -33,6 +33,8 @@ if not interactive: # Skip in interactive mode
     asciiPrint(screen, transpose=True)
     print("Part 1 - total number of block tiles: ", sum(sum(screen == 2)))
 
+bottomY = screen.shape[1]
+dprint("Using screen height: ", bottomY)
 
 # Part 2
 
@@ -48,19 +50,18 @@ def look_ahead(vm, moves = [0], bounces = 0):
             bricks += 1
         elif id == 4:
             ball_moves += 1
-            if y == 17:
+            if y == bottomY - 3:
                 if bounces:
                     bounces -= 1
                 else:
                     ball_x = x
                     break
 
-
     return (ball_moves, ball_x, bricks)
 
 # Let's begin:
 
-instructions = loadCSVInput()
+instructions = loadCSVInput('input_harold.txt')
 instructions[0] = 2
 vm = VM(instructions)
 screen=defaultdict(int)
@@ -109,7 +110,8 @@ while vm.is_running:
             else:
                 paddle_x = [x for x,v in screen.items() if v == 3][0][0]
                 num_moves, next_ball_x, _ = look_ahead(vm)
-                dprint(f"Paddle: {paddle_x} | Ball (in {num_moves}): {next_ball_x} | dist: {abs(paddle_x-next_ball_x)}")
+                # assert next_ball_x >= 0, "No winning move"
+                print(f"Paddle: {paddle_x} | Ball (in {num_moves}): {next_ball_x} | dist: {abs(paddle_x-next_ball_x)}")
                 best_moves = None
                 if game_started:
                     best_bricks = 0
@@ -117,6 +119,8 @@ while vm.is_running:
                         dist = abs(paddle_x-target)
                         moves = ([cmp(target, paddle_x)] * dist + [0]*(num_moves-dist))[:num_moves]
                         nn_moves, nn_ball_x, bricks = look_ahead(vm, moves=moves, bounces=1)
+                        print(f"Paddle: {paddle_x} | Ball (in {nn_moves}): {nn_ball_x} | dist: {abs(paddle_x-nn_ball_x)}")
+
                         if nn_ball_x >= 0 and bricks > best_bricks and (nn_moves - num_moves) >= abs(nn_ball_x-target):
                             best_bricks = bricks
                             best_moves  = moves
