@@ -9,28 +9,14 @@ import networkx as nx
 import numpy as np
 
 from ..utils import dprint, setVerbosity, inputFile
-from ..graphics import snapshot, saveAnimatedGIF
+# from ..graphics import snapshot, saveAnimatedGIF
 
-# arr2str = lambda a: '\n'.join([''.join([str(c) for c in line]) for line in a])
-# isInMap = lambda n, w, b = 0: all(0+b <= n[i] < w.shape[i]-b for i in (0,1))
-# isEmpty = lambda n,w: isInMap(n,w) and w[n[0],n[1]] == '.'
-# move = lambda n,d, a = 1: (n[0]+ a*d[0], n[1]+ a*d[1], *n[2:])
 
-with open('2019/22/input.txt') as f:
+with open(inputFile()) as f:
     shuffles = [s for s in f.read().strip().split('\n')]
 
-# shuffles = """deal into new stack
-# cut -2
-# deal with increment 7
-# cut 8
-# cut -4
-# deal with increment 7
-# cut 3
-# deal with increment 9
-# deal with increment 3
-# cut -1"""
-# shuffles = [s for s in shuffles.strip().split('\n')]
-#
+# Part 1: The age of innocence
+
 # deck = list(range(0, 10007))
 #
 # def dealInc(deck, n):
@@ -48,146 +34,95 @@ with open('2019/22/input.txt') as f:
 #     'cut ': (lambda x,n: x[n:] + x[:n])
 # }
 #
-# for _ in range(5):
-#     for s in shuffles:
-#         for cmd,fn in cmds.items():
-#             if s.startswith(cmd):
-#                 if cmd[-1] == ' ':
-#                     arg = int(s[len(cmd):])
-#                     # print(cmd, arg)
-#                     deck = fn(deck, arg)
-#                 else:
-#                     # print(cmd)
-#                     deck = fn(deck)
-#                 # assert cardPos < deckSize
-#                 break
-#     print(deck.index(2019))
+# for s in shuffles:
+#     for cmd,fn in cmds.items():
+#         if s.startswith(cmd):
+#             if cmd[-1] == ' ':
+#                 arg = int(s[len(cmd):])
+#                 deck = fn(deck, arg)
+#             else:
+#                 deck = fn(deck)
+#             # assert card < m
+#             break
+# print("Part 1 - card 2019 is at: ", deck.index(2019))
 
-#######
+# Part 2: Number Theory Chainsaw Massacre
 
 import functools
 
-def dealInc(deckSize, n, x, a, b, rep):
-    # return (cardPos*n) % deckSize
-    return (a*n, b*n) # f"({cardPos}*{n})"
-
-def cutCardsPos(deckSize, n, x, a, b, rep):
-    if rep < 1 and x <= n:
-        # assert rep < 1
-        # return cardPos + deckSize - n
-        # return f"({deckSize-n}+{cardPos})"
-        return (a, b+deckSize-n)
-    else:
-        # return cardPos - n
-        # return f"({cardPos}-{n})"
-        return (a, b-n)
-
-def cutCardsNeg(deckSize, n, x, a, b, rep):
-    if rep < 1 and x >= deckSize-n:
-        # assert rep < 1
-        # return cardPos - deckSize + n
-        # return f"({cardPos}-{deckSize-n})"
-        return (a, b-deckSize+n)
-    else:
-        # return cardPos + n
-        # return f"({cardPos}+{n})"
-        return (a, b+n)
-
-# deckSize-1 -(ax + b)
-def dealNew(deckSize, x, a, b, rep):
-    # return deckSize - cardPos - 1
-    # return f"({deckSize-1}-{cardPos})"
-    return (-a, deckSize-1-b)
-
 cmds = {
-    'deal with increment ': dealInc,
-    'deal into new stack': dealNew,
-    'cut -': cutCardsNeg,
-    'cut ': cutCardsPos,
+    'deal with increment ': lambda x,m,a,b: (a*x %m, b*x %m),
+    'deal into new stack': lambda _,m,a,b: (-a %m, (m-1-b)%m),
+    'cut -': lambda x,m,a,b: (a, (b-m+x)%m),
+    'cut ': lambda x,m,a,b: (a, (b+m-x)%m),
 }
 
-# (((s-1 - ((x*64))) - 1004) * 31) % s
-# deal with increment 64
-# deal into new stack
-# cut 1004
-# deal with increment 31
-
-
-deckSize = 119315717514047
-cardPos = 2020
-# deckSize = 10007
-# initialCardPos = cardPos = 2019
-
-repeat = 101741582076661
-# repeat = 1
-
-shuffleCmds = []
+shuffleSeq = []
 for s in shuffles:
     for cmd,fn in cmds.items():
         if s.startswith(cmd):
-            if len(s) > len(cmd):
-                arg = int(s[len(cmd):])
-                shuffleCmds += [functools.partial(fn, deckSize, arg)]
-            else:
-                shuffleCmds += [functools.partial(fn, deckSize)]
+            # if len(s) > len(cmd):
+            arg = int(s[len(cmd):]) if len(s) > len(cmd) else 0
+            shuffleSeq += [functools.partial(fn, arg)]
             break
 
-a0 = 1
-b0 = 0
-for i,shuffleCmd in enumerate(shuffleCmds):
-    a0,b0 = shuffleCmd(a0*cardPos + b0, a0, b0, 0)
-    a0 = a0 % deckSize
-    b0 = b0 % deckSize
+def modularComp(shuffleSeq, m, n, card = None, pos = None):
+    a,b = 1,0
+    for shuffleCmd in shuffleSeq:
+        a,b = shuffleCmd(m, a, b)
+        a = a % m
+        b = b % m
 
-print(a0,b0)
-print("Res:", (a0*cardPos + b0) % deckSize)
-res1 = (a0*cardPos + b0) % deckSize
+    # pos = card * a + b
+    # card = (pos - b) * inv_a
 
-a, b = 1, 0
-# for rep in range(1, 5):
-for i,shuffleCmd in enumerate(shuffleCmds):
-    a,b = shuffleCmd('x', a, b, 1)
-    a = a % deckSize
-    b = b % deckSize
+    # pos = (card - r) * a**n + r
+    # card = (pos - r) * inv_a**n + r
 
-# x * a + b
-# r = b / (1-a)
-x = res1
-print("a,b:", a,b)
-r = b / (1-a)
+    # r = b / (1-a)
+    #   = b * ((1-a) ** (phi_m - 1))
 
+    print("a =", a, " | b =", b)
+    phi_m = m - 1 # m is prime
+    inv_a = pow(a, phi_m - 1, m)
+    r = (b * pow(1-a, phi_m - 1, m)) % m
 
-n = 7
-print( (
-    modMult(pow(a,n,deckSize), res1, deckSize)
-     + ((pow(a, n) * b // (a-1)) % deckSize)
-     +  r
-) % deckSize )
-#
-#
-# print( math.ceil(
-#     modMult(pow(a,n), res1, deckSize)
-#      + ((pow(a, n) * b // (a-1)) % deckSize)
-#      +  r
-# ) % deckSize )
+    if card:
+        calcPos = ((card - r) * pow(a, n, m) + r) % m
+        print(f"{card} is at pos: {calcPos}")
+
+    if pos:
+        calcCard = ((pos - r) * pow(inv_a, n, m) + r) % m
+        print(f"Card at #{pos}: {calcCard}\n")
+
+    if pos and card:
+        assert pos == calcPos, "Calculated position incorrect"
+        assert card == calcCard, "Calculated card incorrect"
 
 
+print("testing with part 1 result:")
+modularComp(shuffleSeq, m = 10007, n = 1, card = 2019, pos = 8502)
 
-# n = repeat
-# print( math.ceil(
-#     modMult(pow(a,n), res1, deckSize) + ((pow(a,n) * b // (a-1)) % deckSize) +  r
-# ) % deckSize )
+print("testing iteratively:")
+m = 119315717514047
+card = 2020
 
-# for rep in range(1, repeat):
-#     if rep%10000 == 0:
-#         print("#", rep, end="\r")
-#     for i,shuffleCmd in enumerate(shuffleCmds):
-#         cardPos = shuffleCmd(cardPos, rep)
-#         if cardPos == initialCardPos:
-#             print("rep:", rep, " - i:", i)
-#             print(cardPos)
-#             sys.exit()
+a,b = 1,0
+cardPos = []
+for i in range(100):
+    print(f"#{i} ({a},{b}): {(a*card + b) % m}")
+    cardPos += [((a*card + b) % m, a, b)]
+    for shuffleCmd in shuffleSeq:
+        a,b = shuffleCmd(m, a, b)
+        a = a % m
+        b = b % m
 
-# print(cardPos)
+for n, (pos, a, b) in enumerate(cardPos):
+    print(f"{n}: {pos}")
+    phi_m = m - 1
+    inv_a = pow(a, phi_m - 1, m)
+    print(f"[iterative] Card at {pos}: ", ((pos - b)%m * inv_a) % m)
+    modularComp(shuffleSeq, m, n, card = card, pos = pos)
 
-# 8502
+print("Part 2")
+modularComp(shuffleSeq, m = 119315717514047, n = 101741582076661, pos = 2020)
