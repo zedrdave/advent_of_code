@@ -114,8 +114,6 @@ for i in range(100):
     cardPos += [((a*card + b) % m, a, b)]
     for shuffleCmd in shuffleSeq:
         a,b = shuffleCmd(m, a, b)
-        a = a % m
-        b = b % m
 
 for n, (pos, a, b) in enumerate(cardPos):
     print(f"{n}: {pos}")
