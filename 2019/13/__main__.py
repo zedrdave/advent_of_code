@@ -18,7 +18,7 @@ saveAnimation = True
 # Part 1
 
 if not interactive: # Skip in interactive mode
-    instructions = loadCSVInput('input_harold.txt')
+    instructions = loadCSVInput()
     vm = VM(instructions)
     screen=defaultdict(int)
 
@@ -61,7 +61,7 @@ def look_ahead(vm, moves = [0], bounces = 0):
 
 # Let's begin:
 
-instructions = loadCSVInput('input_harold.txt')
+instructions = loadCSVInput()
 instructions[0] = 2
 vm = VM(instructions)
 screen=defaultdict(int)
