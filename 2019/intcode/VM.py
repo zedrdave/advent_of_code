@@ -17,19 +17,17 @@ class OP(IntEnum):
     INCREMENT_RB = 9
     HALT = 99
 
-# https://github.com/e-nomem/AdventOfCode/blob/master/2019/intcode/io.py
-
 class NeedInputException(Exception):
     pass
 
 class VM:
-    def __init__(self, program, input = [], phase = None):
+    def __init__(self, program, input = None, phase = None):
         self.mem = collections.defaultdict(int)
         for i,d in enumerate(program):
             self.mem[i] = d
         self.RB = 0
         self.IP = 0
-        self.input = input
+        self.input = input if input else []
         if phase:
             self.set_param(1, phase)
             self.IP += 2
