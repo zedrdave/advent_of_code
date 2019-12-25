@@ -16,6 +16,7 @@ saveAnimation = False
 
 
 def look_ahead(vm, moves = [0], bounces = 0):
+    global yMax
     temp_vm = copy.deepcopy(vm)
     ball_x = -1
     ballPositions = []
@@ -27,7 +28,7 @@ def look_ahead(vm, moves = [0], bounces = 0):
             bricks += 1
         elif id == 4:
             ballPositions += [(x,y)]
-            if y == 17:
+            if y == yMax - 2:
                 if bounces:
                     bounces -= 1
                 else:
@@ -39,40 +40,36 @@ def look_ahead(vm, moves = [0], bounces = 0):
 
 
 def play_ahead(vm, screen, moves = [], useCopy = True):
+    global yMax
     if useCopy:
         vm = copy.deepcopy(vm)
         screen = copy.deepcopy(screen)
     ballVector = []
     bricks = 0
     vm.input = list(moves)
+    bug = False
     while vm.is_running:
         try:
             x, y, id = next(vm.run()), next(vm.run()), next(vm.run())
             if x == -1 and y == 0 and id > 0: # hackish way to know a brick was hit
                 bricks += 1
-            # print(x,y,id, "   ", end='\r')
-            # if x == 1 and y == 18 and id == 4:
-            #     snapshot(screen, True, False)
-            #     print(moves)
-            #     print(vm.input)
-            #     screen[x,y] = id
-            #     snapshot(screen, True, False)
-            # if x == 2 and y == 18 and id == 3:
-            #     snapshot(screen, True, False)
-            #     print(moves)
-            #     print(vm.input)
-            #     screen[x,y] = id
-            #     snapshot(screen, True, False)
-            if x == 1 and y == 18 and id == 4: # Bug
-                vm = False
-                # screen[x,y] = id
-                # snapshot(screen)
-                # assert False
-                break
+            if x == 1 and y == yMax-1 and id == 4: # Bug
+                bug = True
+                return False, screen, ballVector[-3:], bricks
+            # if bug and x == 2 and y == 18 and id == 3:
+            #     print("Bug!")
+            #     return -2, screen, ballVector[-3:], bricks
+                    # vm = False
+                    # screen[x,y] = id
+                    # snapshot(screen)
+                    # assert False
+                    # break
             if x != -1 or y != 0:
                 if id == 4:
                     ballVector += [(x,y)]
                 screen[x,y] = id
+            # if bug:
+            #     print(x,y,id)
         except StopIteration:
             if any(b for b in screen.values() if b == 2):
                 vm = False
@@ -82,7 +79,7 @@ def play_ahead(vm, screen, moves = [], useCopy = True):
     return vm, screen, ballVector[-3:], bricks
 
 
-bestStepNum = 80 # None
+bestStepNum = 65 # None
 bestMoves = None
 states = {}
 totBranches = 0
@@ -132,6 +129,12 @@ def recurSolve(thisVm, thisScreen, stepNum = 0, moves = []):
 
     nextStates = [(newMoves, *play_ahead(thisVm, thisScreen, moves=newMoves, useCopy=(len(newMovesArr) > 1))) for newMoves in newMovesArr]
 
+    # for newMoves, newVm, newScreen, _, _ in nextStates:
+    #     if newVm == -2:
+    #         print("Found bug:")
+    #         print(moves + newMoves)
+    #         sys.exit()
+
     # print([x[4] for x in sorted(nextStates, key = lambda x:x[4], reverse = True)])
     for newMoves, newVm, newScreen, _, _ in sorted(nextStates, key = lambda x:x[4], reverse = True):
         if newVm:
@@ -147,10 +150,12 @@ vm = VM(instructions)
 screen=defaultdict(int)
 score = 0
 
+yMax = 0
 solveVm, solveScreen, _, _ = play_ahead(vm, screen, useCopy = True)
 snapshot(solveScreen, printToScreen = True, saveAnimation = False, reset=True)
 xMax = max(x for x,y in solveScreen.keys() if solveScreen[x,y] == 0)
 xMin = min(x for x,y in solveScreen.keys() if solveScreen[x,y] == 0)
+yMax = max(y for x,y in solveScreen.keys() if solveScreen[x,y] == 0)
 # import cProfile
 # cProfile.run("recurSolve(solveVm, solveScreen)")
 try:

@@ -15,21 +15,24 @@ use_curses = False # Work in progress
 printToScreen = True
 saveAnimation = True
 
+progMoves = []
+
 # Part 1
 
+instructions = loadCSVInput()
+vm = VM(instructions)
+screen=defaultdict(int)
+
+while vm.is_running:
+    try:
+        for x,y,id in zip(*[iter(vm.run())]*3):
+            screen[x,y] = id
+    except StopIteration:
+        break
+
+screen = sparseToDense(screen)
+
 if not interactive: # Skip in interactive mode
-    instructions = loadCSVInput()
-    vm = VM(instructions)
-    screen=defaultdict(int)
-
-    while vm.is_running:
-        try:
-            for x,y,id in zip(*[iter(vm.run())]*3):
-                screen[x,y] = id
-        except StopIteration:
-            break
-
-    screen = sparseToDense(screen)
     asciiPrint(screen, transpose=True)
     print("Part 1 - total number of block tiles: ", sum(sum(screen == 2)))
 
@@ -63,7 +66,7 @@ def look_ahead(vm, moves = [0], bounces = 0):
 
 instructions = loadCSVInput()
 instructions[0] = 2
-vm = VM(instructions)
+vm = VM(instructions, input = progMoves)
 screen=defaultdict(int)
 score = 0
 game_started = False
@@ -81,7 +84,6 @@ key_mapping = {44:-1, 46:1, 32:0}
 #     return movesSoFar + ball_moves
 
 
-
 while vm.is_running:
     try:
         x, y, id = next(vm.run()), next(vm.run()), next(vm.run())
@@ -89,7 +91,7 @@ while vm.is_running:
             score = id
         else:
             screen[x,y] = id
-            if id == 4 and game_started:
+            if id == 4: # and game_started:
                 snapshot(screen, False, saveAnimation)
     except StopIteration:
         print("###################\n     YOU WIN!\n\n Final Score:", score, "\n###################\n")
@@ -140,4 +142,4 @@ if use_curses:
 print("Part 2 - Final score: ", score)
 
 if saveAnimation:
-    saveAnimatedGIF(tileSize = 15, duration=1)
+    saveAnimatedGIF(tileSize = 15, duration=30)

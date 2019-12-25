@@ -46,7 +46,7 @@ def saveAnimatedGIF(tileSize = 10, outputFile = 'animation.gif', freq = 1, durat
     global frames
     if len(frames) == 0:
         return
-
+    frames = frames + [frames[-2]] * 30
     tilePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tiles')
 
     print(f"Saving animation ({len(frames)} frames)…")
