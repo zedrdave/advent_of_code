@@ -2,9 +2,8 @@
 
 See https://adventofcode.com/2019/about
 
-* To run Python code (when `<DAY>/__main__.py` is present): `python3 -m 2019.<DAY>` **from the repo root**
+* To run Python code: `python3 -m 2019.<DAY>` **from the repo root**
 * *Optional* (if you have Pipenv installed): `pipenv run python3 -m 2019.<DAY>`
-* To run standalone `.py` code: `python3 ./FILE.py`
 * To run `.c` code: `gcc FILE.c -o out.exe && ./out.exe`
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
@@ -206,3 +205,17 @@ Somewhere between 2 and 3, I briefly considered switching from Python to C, know
 Somewhere between 3 and 4, it started becoming clear that FFT (the Fourier kind) might be the way to go. A fact I blissfully ignored, as I would rather spend 2h messing with patterns, than implement FFT…
 
 **Today's lesson:** Visualise your input and look for patterns…
+
+## 17
+
+Made the stupid assumption that the path could only turn at corners, and had to ignore those very intersections I had to list in part 1. Given the constraints and diversity of lengths that had to be covered, this would have meant a very limited number of possibilities, and a problem that could potentially be solved with a pen-and-paper application of a basic compression algorithm. Except no solution seemed to exist. After progressively extending the problems in every directions *except the one that mattered* (allowing dangling turns at either end of a program, using pairs of 'R'/'L' to combine two segments into one, breaking down instructions down to atomic moves…), I eventually came to my senses, ran an exhaustive DFS of all possible paths using all intersections, and quickly found a compressible pattern that used none of these fancy tricks…
+
+Comparing to others, it *seems* I may have been unlucky in my input, in that some indeed did not need to consider intersection turns, and had no trouble solving by hand. Still a lesson to be learnt.
+
+**Today's lesson:** It's a lot faster to code a quick DFS check, than exhaust all possible alternatives by hand.
+
+## 18
+
+Started off the half-baked recursion-based short path function I had coded for day 15, since it had done the job just fine then, and whipping out `networkx` for a refactor *felt* like too much effort, compared to solving in `numpy`. A few pathological test maps and a lot of headache-inducing indexing soup later, I moved everything to a graph restricted to doors/keys and effortlessly solved it with Djikstra…
+
+**Today's lesson:** Everything is easier as a graph.
