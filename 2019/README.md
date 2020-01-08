@@ -219,3 +219,33 @@ Comparing to others, it *seems* I may have been unlucky in my input, in that som
 Started off the half-baked recursion-based short path function I had coded for day 15, since it had done the job just fine then, and whipping out `networkx` for a refactor *felt* like too much effort, compared to solving in `numpy`. A few pathological test maps and a lot of headache-inducing indexing soup later, I moved everything to a graph restricted to doors/keys and effortlessly solved it with Djikstra…
 
 **Today's lesson:** Everything is easier as a graph.
+
+## 19
+
+Wasted a lot of time on a recursive linear approximation, before realising a dumb 2-dimensional exploration worked just fine.
+
+## 20
+
+This time around: went straight for the `networkx` implementation, and things just… worked.
+
+## 21
+
+Spent some time playing around manually and, expecting an intractably long sequence of jumps, was getting ready to code a boolean clause generator… When the manual solution I had written as a test, suddenly finished the whole thing. A bit anti-climactic.
+
+## 22
+
+By far the most painful day of the lot. Not only did I have to delve into deeply-traumatic memories of college Number Theory, but I also spent hours in utter confusion as to why my painfully obtained solution wouldn't work. Turns out I completely failed to absorb Day 2's lesson, and jumped straight at searching for the position of card 2020, instead of searching for the **card at position 2020**. When all said and done, and assuming that one 1. remembered enough Number Theory to do modular calculus 2. noticed that the mod was prime (making it easy to exponentiate), the rest was… actually still pretty damn difficult.
+
+## 23
+
+This was oddly simple and straightforward. Perhaps my VM implementation made it easier than for some (though I doubt it), but that typical "oops, brute-force ain't gonna cut it" moment never came, and the whole thing was solvable in a dozen very straightforward lines of code.
+
+I did regret not having had the time to finish my asyncIO version, since it was the ideal use-case, but that would have been purely for the fun of it.
+
+## 24
+
+Yet another indices-soup solution. Worked, but left me feeling there must be a cleaner way to do things.
+
+## 25
+
+Mostly for fun. Still managed to build a semi-automated solution that parsed input and built a map. Interesting issues to solve were the non-euclidean nature of the graph (arbitrary distances between two rooms) and the sudden stop of the VM upon winning, which I interpreted as a crash for the longest time.
