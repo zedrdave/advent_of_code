@@ -9,7 +9,7 @@ verify_ssl = true
 numpy = "*"
 pillow = "*"
 keras = "*"
-tensorflow = "*"
+tensorflow = ">=2.0.1"
 sklearn = "*"
 
 [requires]
