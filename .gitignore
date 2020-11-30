@@ -1,3 +1,5 @@
+.ipynb_checkpoints/
+session_cookie.txt
 *.exe
 .DS_Store
 __pycache__
