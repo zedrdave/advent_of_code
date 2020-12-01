@@ -9,6 +9,7 @@ import webbrowser
 from collections import defaultdict
 import numpy as np
 import requests
+import inspect
 
 cmp = lambda a,b: (a > b) - (a < b)
 
@@ -53,8 +54,8 @@ def dl_input(day, sc='session_cookie.txt', year=2020):
 def countdown(year=2020):
     dt = datetime.datetime.now(pytz.timezone('EST'))
 
-    if dt.hour < 18:
-        print(f"Current EST time is {dt.strftime('%H:%M (%d/%m)')}. Try again in ~{23-dt.hour-1} hours…")
+    if dt.hour < 23:
+        print(f"Current EST time is {dt.strftime('%H:%M (%d/%m)')}. Try again in ~{23-dt.hour} hours…")
         return None
 
     wait_sec = (59-dt.minute) * 60 + (59-dt.second)
@@ -72,7 +73,7 @@ def countdown(year=2020):
 
     print("It's time!")
     while True:
-        pb_input = utils.dl_input(new_day, year=year)
+        pb_input = dl_input(new_day, year=year)
         if pb_input is not False:
             break
         print('.', end='')
@@ -83,17 +84,32 @@ def countdown(year=2020):
 
     webbrowser.open(f'https://adventofcode.com/{year}/day/{new_day}', new=2)
 
-    print(pb_input)
+    return pb_input
 
-def input_file(file = 'input.txt'):
-    return os.path.join(os.getcwd(), file)
+def input_file(day=None, year=2020, file='input.txt'):
+    if day is None:
+        for frm in inspect.stack():
+            mod = inspect.getmodule(frm[0])
+            if mod is None:
+                raise Exception("Need to provide day if not calling as package")
+            if not mod.__file__.endswith('utils/__init__.py'):
+                break
+        if mod.__file__.endswith('utils/__init__.py'):
+            raise Exception("Need to provide day if not calling from subdir")
+        return os.path.join(os.path.dirname(mod.__file__), file)
+    else:
+        return os.path.join(os.getcwd(), f'{day:02}', file)
 
-def load_CSV_input(file = 'input.txt'):
-    with open(input_file(file)) as f:
+def load_int_input(day=None, file='input.txt'):
+    with open(input_file(day, file)) as f:
+        return [int(i.strip()) for i in f.readlines()]
+
+def load_CSV_input(day=None, file='input.txt'):
+    with open(input_file(day, file)) as f:
         return [int(i.strip()) for i in f.read().split(',')]
 
-def load_XYZ_input():
-    with open(input_file()) as f:
+def load_XYZ_input(day=None):
+    with open(input_file(day)) as f:
         return [[int(pos[2:]) for pos in l.strip()[1:-1].split(', ')] for l in f]
 
 def set_verbosity(level):
