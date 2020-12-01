@@ -1,4 +1,4 @@
-# Advent of code 2019
+# Advent of code 2020
 
 See https://adventofcode.com/2020/about
 
