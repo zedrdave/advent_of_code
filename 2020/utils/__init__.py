@@ -40,7 +40,7 @@ def dl_input(day, sc='session_cookie.txt', year=2020):
         txt = r.text.strip()
         if not os.path.exists(f'{day}'):
             os.mkdir(f'{day}')
-        with open(f'{day}/input.txt', 'w') as f:
+        with open(f'{day:02}/input.txt', 'w') as f:
             f.write(txt)
         return txt
     elif r.status_code == 404:
@@ -99,6 +99,10 @@ def input_file(day=None, year=2020, file='input.txt'):
         return os.path.join(os.path.dirname(mod.__file__), file)
     else:
         return os.path.join(os.getcwd(), f'{day:02}', file)
+
+def load_string_input(day=None, file='input.txt'):
+    with open(input_file(day, file)) as f:
+        return [s.strip() for s in f.readlines()]
 
 def load_int_input(day=None, file='input.txt'):
     with open(input_file(day, file)) as f:
