@@ -15,3 +15,9 @@ Straightforward Day 1 opener.
 With input size `n = 200`, there really was no need overthink it past a brute-force loop (too lazy to even break out `itertools` doc).
 
 For those who *did* want to optimise, there's an [elegant solution](https://gist.github.com/sharpobject/72ccfe8eaac07346576fb5e6670681da) using a lookup table to bring complexity down from `O(n^r)` to `O(n^ceil(r/2))` (with `r` the number of digits to add/multiply).
+
+## 2
+
+Still very straightforward territory.
+
+Because I never learn, I wasted a good 5 out of 10 mins, screwing around with regex and fancy search functions that I *knew* weren't necessary, before deciding to settle for a simple, clean, list comprehension: `[x == c for c in mystring]`…
