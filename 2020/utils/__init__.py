@@ -32,14 +32,14 @@ def dl_input(day, sc='session_cookie.txt', year=2020):
     else:
         raise ValueError("session cookie must be provided")
 
-    url = f"https://adventofcode.com/{year}/day/{day}/input"
+    url = f"https://adventofcode.com/{year}/day/{day:02}/input"
 
     r = requests.get(url, cookies={'session':sc})
 
     if r.status_code == 200:
         txt = r.text.strip()
-        if not os.path.exists(f'{day}'):
-            os.mkdir(f'{day}')
+        if not os.path.exists(f'{day:02}'):
+            os.mkdir(f'{day:02}')
         with open(f'{day:02}/input.txt', 'w') as f:
             f.write(txt)
         return txt
@@ -82,7 +82,7 @@ def countdown(year=2020):
     print("************ GO! *************")
     print(datetime.datetime.now(pytz.timezone('EST')))
 
-    webbrowser.open(f'https://adventofcode.com/{year}/day/{new_day}', new=2)
+    webbrowser.open(f'https://adventofcode.com/{year}/day/{new_day:02}', new=2)
 
     return pb_input
 
