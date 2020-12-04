@@ -32,7 +32,7 @@ def dl_input(day, sc='session_cookie.txt', year=2020):
     else:
         raise ValueError("session cookie must be provided")
 
-    url = f"https://adventofcode.com/{year}/day/{day:02}/input"
+    url = f"https://adventofcode.com/{year}/day/{day}/input"
 
     r = requests.get(url, cookies={'session':sc})
 
@@ -44,6 +44,7 @@ def dl_input(day, sc='session_cookie.txt', year=2020):
             f.write(txt)
         return txt
     elif r.status_code == 404:
+        print(f"{url} returned:", r.text)
         return False
     else:
         raise IOError("Server responded {}: {}\n"
@@ -82,7 +83,7 @@ def countdown(year=2020):
     print("************ GO! *************")
     print(datetime.datetime.now(pytz.timezone('EST')))
 
-    webbrowser.open(f'https://adventofcode.com/{year}/day/{new_day:02}', new=2)
+    webbrowser.open(f'https://adventofcode.com/{year}/day/{new_day}', new=2)
 
     return pb_input
 
