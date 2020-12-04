@@ -25,3 +25,13 @@ ans1 = sum([len(validators.keys() - p.keys() - set(['cid'])) == 0 for p in passp
 ans2 = sum([all(validator(p.get(k, '')) for k,validator in validators.items()) for p in passports])
 
 print(f"Part 1: {ans1}\nPart 2: {ans2}")
+
+
+# Hardened version:
+ans2 = 0
+for p in passports:
+    try:
+        if all(validator(p.get(k, '')) for k,validator in validators.items()):
+            ans2 += 1
+    except:
+        print('Invalid format:', p)
