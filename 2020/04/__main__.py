@@ -2,9 +2,8 @@ import re
 
 from ..utils import *
 
-lines = ' '.join([l.strip() if l != '\n' else l for l in open(input_file())])
-
-passports = [{f.split(':')[0]:f.split(':')[1] for f in l.strip().split()} for l in lines.split('\n')]
+passports = [{f.split(':')[0]:f.split(':')[1] for f in l.split()}
+             for l in open(input_file()).read().strip().split('\n\n')]
 
 def check_year(y, f, t):
     return re.match('^\d{4}$', y) and f <= int(y) <= t
