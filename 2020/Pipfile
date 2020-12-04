@@ -11,6 +11,7 @@ pillow = "*"
 pandas = "*"
 ipykernel = "*"
 requests = "*"
+advent-of-code-data = "*"
 
 [requires]
 python_version = "3.8"
