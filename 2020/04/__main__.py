@@ -27,7 +27,13 @@ ans2 = sum([all(validator(p.get(k, '')) for k,validator in validators.items()) f
 print(f"Part 1: {ans1}\nPart 2: {ans2}")
 
 
-# Hardened version:
+
+###############################################
+#
+# Hardened version (will work on any values):
+#
+###############################################
+
 ans2 = 0
 for p in passports:
     try:
