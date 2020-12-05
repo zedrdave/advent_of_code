@@ -21,3 +21,16 @@ For those who *did* want to optimise, there's an [elegant solution](https://gist
 Still very straightforward territory.
 
 Because I never learn, I wasted a good 5 out of 10 mins, screwing around with regex and fancy search functions that I *knew* weren't necessary, before deciding to settle for a simple, clean, list comprehension: `[x == c for c in mystring]`…
+
+
+## 3
+
+Not gonna lie: I *knew* `mod` was the way to go. But I also knew that merely repeating the grid a bunch of times would work fine and spare my sleep-deprived neurones a teeny bit of work at 6am (did eventually clean up the code).
+
+## 4
+
+Buncha Regexes and fairly mundane validation exercise (yay for functional languages).
+
+## 5
+
+Some fun at last. Slightly ashamed that it took me until the beginning of the second part, to bother noticing that there was no need to split row bits and col bits to compute the seat id.
