@@ -21,7 +21,7 @@ def dl_input(day, sc='session_cookie.txt', year=2020):
         raise ValueError("day must be a number")
 
     if day < 1 or day > 25:
-        raise ValueError("day must be in the range 0 < day < 26")
+        raise ValueError("day must be in the range 1 <= day <= 25")
 
     if sc is not None:
         try:
