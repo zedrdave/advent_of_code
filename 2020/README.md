@@ -34,3 +34,5 @@ Buncha Regexes and fairly mundane validation exercise (yay for functional langua
 ## 5
 
 Some fun at last. Slightly ashamed that it took me until the beginning of the second part, to bother noticing that there was no need to split row bits and col bits to compute the seat id.
+
+*TiL* that a `int(x, base)` could be used to quickly convert a string of binaries (but due to the need to replace each character, list comprehension weren't a bad idea anyway).
