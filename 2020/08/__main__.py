@@ -15,7 +15,6 @@ def run(P, IP = 0):
         IP += 1
         if IP in ℮:
             return False, 𝒜
-
     return IP == len(P), 𝒜
 
 print('Part 1', run(𝓟)[1])
