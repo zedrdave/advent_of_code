@@ -39,7 +39,7 @@ print('Part 2:', 𝒜)
 
 import networkx as nx
 
-𝓟 = [(l[:3], int(l[4:])) for l in open('08/input.txt')]
+𝓟 = [(l[:3], int(l[4:])) for l in open(input_file())]
 
 G = nx.DiGraph([n, n+(a if cmd == 'jmp' else 1), {'acc': (a if cmd == 'acc' else 0)}]
                for n,(cmd,a) in enumerate(𝓟))
@@ -54,7 +54,7 @@ for s,t in cycle:
     nt = s + {'jmp': 1, 'nop': a, 'acc': 0}[cmd]
     if nx.has_path(G, nt, T):
         G.remove_edge(s, t)
-        G.add_edge(s, nt, a=0)
+        G.add_edge(s, nt, acc=0)
         break
 
 print('Part 2:', nx.shortest_path_length(G, 0, T, 'acc'))
