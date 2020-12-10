@@ -65,7 +65,7 @@ Since I was up way past leaderboard-making time, I decided to skip the quick sol
 
 1. Sort and pad the input
 1. Compute diffs between adjacent items (thanks to Part 1, we know these diffs are only 1 or 3)
-1. Break down the input into sub-lists of consecutive numbers separated by numbers that can't be removed (diff 3).
+1. Break down the input into sub-lists of consecutive numbers separated by numbers that can't be removed (`diff == 3`).
 1. Realise that these sub-lists can be renumbered to simple `range(n)`, WLOG
 1. Solve the *much easier* problem of "How many binary strings of length `n` where `000` does not appear"
 1. Manually compute that value for small `n`: `0,1,1,2,4,7,13,24` 
