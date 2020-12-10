@@ -1,5 +1,4 @@
 from ..utils import *
-from functools import *
 
 # Solution using Tribonacci sequence
 D = sorted(int(i) for i in open(input_file()))
