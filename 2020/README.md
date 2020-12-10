@@ -36,3 +36,43 @@ Buncha Regexes and fairly mundane validation exercise (yay for functional langua
 Some fun at last. Slightly ashamed that it took me until the beginning of the second part, to bother noticing that there was no need to split row bits and col bits to compute the seat id.
 
 *TiL* that a `int(x, base)` could be used to quickly convert a string of binaries (but due to the need to replace each character, list comprehension weren't a bad idea anyway).
+
+## 6
+
+Zzz. Counters are great, I suppose?
+
+Might have been a tad more interesting to solve using `itertools`
+
+## 7
+
+More string parsing and counting…
+
+## 8
+
+Be still, my heart: Intcode v.2!
+
+After getting a quick-and-dirty brute-force solution out of the way, used `networkx` to optimally search for and fix the program cycle. Doubt it will be a useful implementation for possible future re-use of this interpreter, but still fun.
+
+## 9
+
+Starting to get a little disappointed by the ability to brute-force all the problems so far…
+
+## 10
+
+"Here we go again, I'm sure nothing a quick brute-force recursion won't s…" ⏳⌛️⏳⌛️
+
+Since I was up way past leaderboard-making time, I decided to skip the quick solution (using DP/memoization) and instead fell down the rabbit-hole of analysing the input structure to find the "trick" (this is probably where being a veteran of AoC 2019 helped: that Part 1 was way too specific not to be a hint). Which turned out to be [a lot more fun than expected](https://github.com/zedrdave/advent_of_code/blob/master/2020/10/__main__.py):
+
+1. Sort and pad the input
+2. Compute diffs between adjacent items (thanks to Part 1, we know these diffs are only 1 or 3)
+2. Break down the input into sub-lists of consecutive numbers separated by numbers that can't be removed (diff 3).
+3. Realise that these sub-lists can be renumbered to simple `range(n)`, WLOG
+4. Solve the *much easier* problem of "How many binary strings of length `n` where `000` does not appear"
+5. Manually compute that value for small `n`: `0,1,1,2,4,7,13,24` 
+6. If you are smart (I'm not): plop it into a [search engine](https://duckduckgo.com/?q=1%2C1%2C2%2C4%2C7%2C13%2C24%2C44&t=osx&ia=web) or better yet, directly into [OES](https://oeis.org/A000073).
+7. If you aren't smart-enough, but driven: toy around with the recursive formula until you realise you are dealing with `F(n) = F(n-3) + F(n-2) + F(n-1)` and realise you are dealing with the [Tribonacci sequence](https://oeis.org/A000073).
+8. Waste a bit of time playing with the idea of implementing a closed-form calculator of Tribonacci numbers, until you realise that a. an iterative approach is actually faster b. you barely need the first 5-6 to solve your input (so basically could have stopped at step 5)
+9. 😎
+10. Bask in the glory of having written a solution that runs in 94 µs instead of 328 µs.
+11. Wonder why you are behind on your actual dayjob today.
+2. Break down the input into sub-lists of consecutive numbers separated by numbers that can't be removed (diff 3).
