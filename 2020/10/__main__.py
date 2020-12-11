@@ -12,10 +12,10 @@ D = sorted(int(i) for i in open(input_file()))
 Δ = [1+p for p,d in enumerate(δ) if d==3]
 L = [hi-lo-1 for lo,hi in zip([0] + Δ[:-1], Δ)]
 
-# Optional, hardcode:
-# T = [1, 1, 2, 4, 7, 13]
 T = [1, 1, 2]
 while len(T) <= max(L): T += [sum(T[-3:])]
+# Optional, hardcode first 6 (input chains are never longer):
+# T = [1, 1, 2, 4, 7, 13]
 
 import math
 print('Part 1:', (len(δ)-len(Δ))*len(Δ),
