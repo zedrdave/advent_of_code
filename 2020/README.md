@@ -70,8 +70,14 @@ Since I got up way past leaderboard-making time, I decided to skip the quick sol
 1. Solve the *much easier* problem of "How many binary strings of length `n` where `000` does not appear"
 1. Manually compute that value for small `n`: `0,1,1,2,4,7,13,24` 
 1. If you are smart (I'm not): plop it into a [search engine](https://duckduckgo.com/?q=1%2C1%2C2%2C4%2C7%2C13%2C24%2C44&t=osx&ia=web) or better yet, directly into [OES](https://oeis.org/A000073).
-1. If you aren't smart-enough, but driven: toy around with the recursive formula until you realise you are dealing with `F(n) = F(n-3) + F(n-2) + F(n-1)` and realise you are dealing with the [Tribonacci sequence](https://oeis.org/A000073).
+1. If you aren't smart-enough, but driven: toy around with the recursive formula until you realise you are dealing with `F(n) = F(n-3) + F(n-2) + F(n-1)`, aka the [Tribonacci sequence](https://oeis.org/A000073).
 1. Waste a bit of time playing with the idea of implementing a closed-form calculator of Tribonacci numbers, until you realise that a. an iterative approach is actually faster b. you barely need the first 5-6 to solve your input (so basically could have stopped at step 5)
 1. 😎
 1. Bask in the glory of having written a solution that runs in 94 µs instead of 328 µs.
 1. Wonder why you are behind on your actual dayjob today.
+
+*TIL*: Python has native support for operations on complex numbers: `a = 2 + 4j; b = a**2`.
+
+## 11
+
+Straightforward grid problem. Remembered how many grid problems last year were easily solvable with a sparse array as a simple Python dict and, sure enough: this one could be solved that way. Compact code, but *very* inefficient solving (`O(n^2)` per iteration, compared to `O(n)` for a basic grid implementation).
