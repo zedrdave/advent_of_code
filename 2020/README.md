@@ -61,7 +61,7 @@ Starting to get a little disappointed by the ability to brute-force all the prob
 
 "Here we go again, I'm sure nothing a quick brute-force recursion won't s…" ⏳⌛️⏳⌛️
 
-Since I was up way past leaderboard-making time, I decided to skip the quick solution (using DP/memoization) and instead fell down the rabbit-hole of analysing the input structure to find the "trick" (this is probably where being a veteran of AoC 2019 helped: that Part 1 was way too specific not to be a hint). Which turned out to be [a lot more fun than expected](https://github.com/zedrdave/advent_of_code/blob/master/2020/10/__main__.py):
+Since I got up way past leaderboard-making time, I decided to skip the quick solution (using DP/memoization) and instead fell down the rabbit-hole of analysing the input structure to find the "trick" (this is probably where being a veteran of AoC 2019 helped: that Part 1 was way too specific not to be a hint). Which turned out to be [a lot more fun than expected](https://github.com/zedrdave/advent_of_code/blob/master/2020/10/__main__.py):
 
 1. Sort and pad the input
 1. Compute diffs between adjacent items (thanks to Part 1, we know these diffs are only 1 or 3)
