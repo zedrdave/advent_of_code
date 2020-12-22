@@ -1,10 +1,10 @@
 from ..utils import *
 
-import math
 
 data = open(input_file()).read()
 
 P = {int(p[5:9]): p[11:] for p in data.split('\n\n')}
+Z = P.values()
 
 edge = lambda p,i: [p[:10], p[9::11], p[-10:], p[0::11]][i]
 
@@ -14,29 +14,31 @@ def transform(p):
         yield '\n'.join(l[::-1] for l in p.split('\n')) # flip
         p = '\n'.join(''.join(l[::-1]) for l in zip(*p.split('\n'))) # rotate
 
-def get_match(pieces, p, side):
-    for o in pieces:
+def match(p, side):
+    for o in Z:
         if o in transform(p):
             continue
         for ot in transform(o):
             if edge(ot, (side+2)%4) == edge(p, side):
                 return ot
-    return 0
 
-Z = P.values()
-corners = [k for k,v in P.items() if sum(not get_match(Z, v, i) for i in range(4)) == 2]
+corners = [k for k,v in P.items() if sum(not match(v, i) for i in range(4)) == 2]
+
+import math
 print('Part 1:', math.prod(corners))
 
-def get_line(pieces, p, orient):
+corner_tile = next(p for p in transform(P[corners[0]]) if (match(p, 2) and match(p, 3)))
+
+def get_line(p, side):
     R = [p]
     for _ in range(11):
-        R += [get_match(pieces, R[-1], orient)]
+        R += [match(R[-1], side)]
     return R
 
-corner_tile = next(p for p in transform(P[corners[0]]) if (get_match(Z, p, 2) and get_match(Z, p, 3)))
-G = [get_line(Z, a, 3) for a in get_line(Z, corner_tile, 2)]
+grid = [get_line(a, 3) for a in get_line(corner_tile, 2)]
 
-image = '\n'.join(''.join(a[i+1:i+9] for a in B[::-1]) for B in G for i in range(11, 99, 11))
+image = '\n'.join(''.join(a[i+1:i+9] for a in B[::-1]) for B in grid for i in range(11, 99, 11))
+
 
 import regex as re # Need `overlapped` option
 
