@@ -1,25 +1,29 @@
 from ..utils import *
 
 P = {int(p[5:9]): p[11:] for p in open(input_file()).read().split('\n\n')}
-Z = P.values()
 
 edge = lambda p,i: [p[:10], p[9::11], p[-10:], p[0::11]][i]
 
+flip = lambda p: '\n'.join(l[::-1] for l in p.split('\n'))
+rot90 = lambda p: '\n'.join(''.join(l[::-1]) for l in zip(*p.split('\n'))) # rotate
+
 def transform(p):
-    for _ in range(4):
-        yield p
-        yield '\n'.join(l[::-1] for l in p.split('\n')) # flip
-        p = '\n'.join(''.join(l[::-1]) for l in zip(*p.split('\n'))) # rotate
+    A = [p]
+    for _ in range(3):
+        A += [rot90(A[-1])]
+    A += [flip(a) for a in A]
+    return A
+
+Z = [z for p in P.values() for z in transform(p)]
 
 def match(p, side):
+    self = transform(p)
     for o in Z:
-        if o in transform(p):
-            continue
-        for ot in transform(o):
-            if edge(ot, (side+2)%4) == edge(p, side):
-                return ot
+        if o not in self and edge(o, (side+2)%4) == edge(p, side):
+            return o
 
 corners = [k for k,v in P.items() if sum(not match(v, i) for i in range(4)) == 2]
+
 
 import math
 print('Part 1:', math.prod(corners))
@@ -55,46 +59,58 @@ print("\nCompact version:")
 #
 ###################################################################
 
+X = 12 # puzzle size
 nl = '\n'
 𝕛 = ''.join
 𝕁 = nl.join
 𝕣 = lambda l:l[::-1]
 
 P = {int(p[5:9]): p[11:] for p in open(input_file()).read().split(nl*2)}
-Z = P.values()
 
+# Edges:
 𝑬 = lambda p,i: [p[:10], p[9::11], p[-10:], p[0::11]][i]
 
+# Transform
 def 𝑻(p):
-    for _ in range(4):
-        yield p; yield 𝕁(𝕣(l) for l in p.split(nl))
-        p = 𝕁(𝕛(𝕣(l)) for l in zip(*p.split(nl)))
+    A = [p]
+    for _ in range(3):
+        A += [𝕁(𝕛(𝕣(l)) for l in zip(*A[-1].split(nl)))] # Rotate
+    A += [𝕁(𝕣(l) for l in a.split(nl)) for a in A] # Flip
+    return {*A}
 
-𝙈 = lambda p,d: next((r for q in Z for r in 𝑻(q) if q not in 𝑻(p) and 𝑬(r,(d+2)%4)==𝑬(p,d)), 0)
+# All pieces in all orientations
+Z = {z for p in P for z in 𝑻(P[p])}
+
+# Matching piece
+𝙈 = lambda p,d: next((z for z in Z-𝑻(p) if 𝑬(z,(d+2)%4)==𝑬(p,d)), 0)
+
+# Corners
 K = [k for k,v in P.items() if sum(not 𝙈(v, i) for i in range(4)) == 2]
 
 import math
 print('Part 1:', math.prod(K))
 
+# "Top left" corner
 p = next(p for p in 𝑻(P[K[0]]) if (𝙈(p,2) and 𝙈(p,3)))
 
-def 𝑳(p, o):
-    R = [p]
-    for _ in range(11):
-        R += [𝙈(R[-1], o)]
-    return R
+# Develop line starting from p's edge d
+def 𝑳(p,d):
+    A = [p]
+    for _ in range(X-1): A += [𝙈(A[-1], d)]
+    return A
 
-G = 𝕁( 𝕛(b[i:i+8] for b in 𝕣(B))
-       for B in [𝑳(a, 3) for a in 𝑳(p, 2)]
-       for i in range(12, 99, 11) )
-
+G = 𝕁( 𝕛(b[i:i+8] for b in 𝕣(B)) # remove left-right edges
+       for B in [𝑳(a,3) for a in 𝑳(p,2)] # build top row, then all columns
+       for i in range(X, 90, X-1) ) # remove top-bottom edges
 
 import regex as re
 w = '[.#\n]{77}'
 𝛹 = f'#.{w+"#....#"*3}##{w}.#{"..#"*5}'
-for Ğ in 𝑻(G):
-    m = len(re.findall(𝛹, Ğ,  overlapped=True))
+for H in 𝑻(G):
+    m = len(re.findall(𝛹,H,0,0,-1,1)) # overlapped = True
     if m: print('Part 2:', sum(c == '#' for l in G for c in l) - 15*m)
+
+
 
 ###################################################################
 #
