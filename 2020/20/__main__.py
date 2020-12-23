@@ -62,7 +62,6 @@ print("\nCompact version:")
 nl = '\n'
 𝕛 = ''.join
 𝕁 = nl.join
-𝕣 = lambda l:l[::-1]
 
 P = {int(p[5:9]): p[11:] for p in open(input_file()).read().split(nl*2)}
 X = 12 # puzzle size: int(len(P)**.5)
@@ -74,8 +73,8 @@ X = 12 # puzzle size: int(len(P)**.5)
 def 𝑻(p):
     A = [p]
     for _ in range(3):
-        A += [𝕁(𝕛(𝕣(l)) for l in zip(*A[-1].split(nl)))] # Rotate
-    A += [𝕁(𝕣(l) for l in a.split(nl)) for a in A] # Flip
+        A += [𝕁(𝕛(l[::-1]) for l in zip(*A[-1].split(nl)))] # Rotate
+    A += [𝕁(l[::-1] for l in a.split(nl)) for a in A] # Flip
     return {*A}
 
 # All pieces in all orientations
@@ -99,7 +98,7 @@ def 𝑳(p,d):
     for _ in range(X-1): A += [𝙈(A[-1], d)]
     return A
 
-G = 𝕁( 𝕛(b[i:i+8] for b in 𝕣(B)) # remove left-right edges
+G = 𝕁( 𝕛(b[i:i+8] for b in B[::-1]) # remove left-right edges
        for B in [𝑳(a,3) for a in 𝑳(p,2)] # build top row, then all columns
        for i in range(X, 90, X-1) ) # remove top-bottom edges
 
