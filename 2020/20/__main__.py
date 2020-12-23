@@ -59,13 +59,13 @@ print("\nCompact version:")
 #
 ###################################################################
 
-X = 12 # puzzle size
 nl = '\n'
 𝕛 = ''.join
 𝕁 = nl.join
 𝕣 = lambda l:l[::-1]
 
 P = {int(p[5:9]): p[11:] for p in open(input_file()).read().split(nl*2)}
+X = 12 # puzzle size: int(len(P)**.5)
 
 # Edges:
 𝑬 = lambda p,i: [p[:10], p[9::11], p[-10:], p[0::11]][i]
