@@ -92,7 +92,7 @@ print('Part 1:', math.prod(K))
 # "Top left" corner
 p = next(p for p in 𝑻(P[K[0]]) if (𝙈(p,2) and 𝙈(p,3)))
 
-# Develop line starting from p's edge d
+# Develop line starting in edge d's direction
 def 𝑳(p,d):
     A = [p]
     for _ in range(X-1): A += [𝙈(A[-1], d)]
