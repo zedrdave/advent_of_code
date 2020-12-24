@@ -1,42 +1,31 @@
 from ..utils import *
 
-data = open(input_file())
+D = {'w':(-1,0), 'nw':(0,-1), 'ne':(1,-1), 'e':(1,0), 'se': (0,1), 'sw': (-1,1)}
+𝓜 = lambda x,y,dx,dy: (x+dx,y+dy)
 
-D = {'w': (-1,0), 'nw': (0,-1), 'ne': (1,-1), 'e': (1,0), 'se': (0,1), 'sw': (-1,1)}
-
-move = lambda x,y,dx,dy: (x+dx,y+dy)
-
-BT = set()
-
-for l in data:
-    pos = (0,0)
+𝐓 = set()
+for l in open(input_file()):
+    P = (0,0)
     while len(l.strip()):
-        if l[:2] in D:
-            pos = move(*pos,*D[l[:2]])
-            l = l[2:]
-        else:
-            pos = move(*pos, *D[l[0]])
-            l = l[1:]
-    if pos in BT:
-        BT.remove(pos)
-    else:
-        BT.add(pos)
+        n = 2 if l[:2] in D else 1
+        P = 𝓜(*P, *D[l[:n]])
+        l = l[n:]
+    𝐓 ^= {P}
 
-print(f"Part 1: {len(BT)}")
+print(f"Part 1: {len(𝐓)}")
 
-neighbours = lambda x,y: sum(move(x,y,*d) in BT for d in D.values())
+𝓝 = lambda *p: sum(𝓜(*p, *D[k]) in 𝐓 for k in D)
+# 𝓑 = lambda n: range(min(X := [x[n] for x in 𝐓])-1, max(X)+2)
+𝓑 = lambda n: range(min(x[n] for x in 𝐓)-1, max(x[n] for x in 𝐓)+2)
 
-for day in range(100):
-    newBT = {*BT}
-    xr, yr = (min(BT)[0]-1, max(BT)[0]+2), (min(x[1] for x in BT)-1, max(x[1] for x in BT)+2)
-    for x in range(*xr):
-        for y in range(*yr):
-            if (x,y) in BT and neighbours(x,y) not in (1,2):
-                newBT.remove((x,y))
-            elif (x,y) not in BT and neighbours(x,y) == 2:
-                newBT.add((x,y))
+for d in range(100):
+    𝐓 = {(x,y) for x in 𝓑(0) for y in 𝓑(1) if ((x,y) in 𝐓 and 𝓝(x,y) == 1) or 𝓝(x,y) == 2}
 
-#     print(f"Day {day+1}: {len(newBT)}")
-    BT = newBT
+    ### Bonus Viz:
+    import time
+    w = 38
+    print(f"\033\143Day {d+1}: {len(𝐓)}\n" + '\n'.join((' '* (y % 2) + ''.join('⬛️' if (x-w,y-w) in 𝐓 else '⬜️' for x in range(2*w))) for y in range(2*w)))
+    time.sleep(.1)
+    ### End Bonus Viz
 
-print(f"Part 2: {len(newBT)}")
+print(f"Part 2: {len(𝐓)}")
