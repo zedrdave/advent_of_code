@@ -20,12 +20,10 @@ print(f"Part 1: {len(𝐓)}")
 
 for d in range(100):
     𝐓 = {(x,y) for x in 𝓑(0) for y in 𝓑(1) if ((x,y) in 𝐓 and 𝓝(x,y) == 1) or 𝓝(x,y) == 2}
-
     ### Bonus Viz:
     import time
     w = 38
     print(f"\033\143Day {d+1}: {len(𝐓)}\n" + '\n'.join((' '* (y % 2) + ''.join('⬛️' if (x-w,y-w) in 𝐓 else '⬜️' for x in range(2*w))) for y in range(2*w)))
     time.sleep(.1)
-    ### End Bonus Viz
 
 print(f"Part 2: {len(𝐓)}")
