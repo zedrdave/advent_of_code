@@ -5,8 +5,9 @@ P = {int(p[5:9]): p[11:] for p in open(input_file()).read().split('\n\n')}
 edge = lambda p,i: [p[:10], p[9::11], p[-10:], p[0::11]][i]
 
 flip = lambda p: '\n'.join(l[::-1] for l in p.split('\n'))
-rot90 = lambda p: '\n'.join(''.join(l[::-1]) for l in zip(*p.split('\n'))) # rotate
+rot90 = lambda p: '\n'.join(''.join(l[::-1]) for l in zip(*p.split('\n')))
 
+# combinations of 8 rotations/flips:
 def transform(p):
     A = [p]
     for _ in range(3):
@@ -14,32 +15,37 @@ def transform(p):
     A += [flip(a) for a in A]
     return A
 
+# All pieces in all orientations:
 Z = [z for p in P.values() for z in transform(p)]
 
+# Matches for piece p along specific side
 def match(p, side):
     self = transform(p)
     for o in Z:
         if o not in self and edge(o, (side+2)%4) == edge(p, side):
             return o
 
-corners = [k for k,v in P.items() if sum(not match(v, i) for i in range(4)) == 2]
-
+corners = [k for k,v in P.items()
+            if sum(not match(v, i) for i in range(4)) == 2]
 
 import math
 print('Part 1:', math.prod(corners))
 
-corner_tile = next(p for p in transform(P[corners[0]]) if (match(p, 2) and match(p, 3)))
+corner_tile = next(p for p in transform(P[corners[0]])
+                    if (match(p, 2) and match(p, 3)))
 
+# Incrementally find row starting from piece, in given direction (side):
 def get_line(p, side):
     R = [p]
     for _ in range(11):
         R += [match(R[-1], side)]
     return R
 
+# Build row starting from corner tile, then all columns from that row:
 grid = [get_line(a, 3) for a in get_line(corner_tile, 2)]
 
+# Remove edges and join all pieces
 image = '\n'.join(''.join(a[i:i+8] for a in B[::-1]) for B in grid for i in range(12, 99, 11))
-
 
 import regex as re # Need `overlapped` option
 
