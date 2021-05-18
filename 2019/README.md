@@ -234,7 +234,7 @@ Spent some time playing around manually and, expecting an intractably long seque
 
 ## 22
 
-By far the most painful day of the lot. Not only did I have to delve into deeply-traumatic memories of college Number Theory, but I also spent hours in utter confusion as to why my painfully obtained solution wouldn't work. Turns out I completely failed to absorb Day 2's lesson, and jumped straight at searching for the position of card 2020, instead of searching for the **card at position 2020**. When all said and done, and assuming that one 1. remembered enough Number Theory to do modular calculus 2. noticed that the mod was prime (making it easy to exponentiate), the rest was… actually still pretty damn difficult.
+By far the most painful day of the lot. Not only did I have to delve into deeply-traumatic memories of college Number Theory, but I also spent hours in utter confusion as to why my painfully obtained solution wouldn't work. Turns out I completely failed to absorb Day 2's lesson, and jumped straight into searching for the position of card 2020, instead of searching for the **card at position 2020**. With all said and done, and assuming one 1. remembered enough Number Theory to do modular calculus 2. noticed that the mod was prime (making it easy to exponentiate), the rest was… actually still pretty damn difficult.
 
 ## 23
 
