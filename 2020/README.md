@@ -8,6 +8,9 @@ See https://adventofcode.com/2020/about
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
 
+This year's self-imposed challenge was "tweet-sized" solutions (in Python). That is: solutions that fit in 280 bytes (input loading and result output included), all the while preserving readability as much as humanly possible (ie: no code-golfing). Mostly succeeded, save for one or two days that just wouldn't fit without resorting to unacceptable code-mangling: https://github.com/zedrdave/advent_of_code/blob/master/2020/Tweets.ipynb
+
+
 ## 1
 
 Straightforward Day 1 opener.
