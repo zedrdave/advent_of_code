@@ -84,3 +84,7 @@ Since I got up way past leaderboard-making time, I decided to skip the quick sol
 ## 11
 
 Straightforward grid problem. Remembered how many grid problems last year were easily solvable with a sparse array as a simple Python dict and, sure enough: this one could be solved that way. Compact code, but *very* inefficient solving (`O(n^2)` per iteration, compared to `O(n)` for a basic grid implementation).
+
+## Etc
+
+Year 2020 turned out to be entertaining, but largely devoid of fun tricks and surprises… → Ended up focussing on crafting tweet-sized solutions, instead of blathering about the (largely straightforward) solving process.
