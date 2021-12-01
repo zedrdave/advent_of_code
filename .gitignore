@@ -5,3 +5,4 @@ session_cookie.txt
 __pycache__
 *.pyc
 debug
+rls
