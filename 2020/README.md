@@ -8,6 +8,9 @@ See https://adventofcode.com/2020/about
 * to run `.go` code: `go build -o out.exe FILE.go && ./out.exe` (or simply: `go run FILE.go`)
 
 
+This year's self-imposed challenge was "tweet-sized" solutions (in Python). That is: solutions that fit in 280 bytes (input loading and result output included), all the while preserving readability as much as humanly possible (ie: no code-golfing). Mostly succeeded, save for one or two days that just wouldn't fit without resorting to unacceptable code-mangling: https://github.com/zedrdave/advent_of_code/blob/master/2020/Tweets.ipynb
+
+
 ## 1
 
 Straightforward Day 1 opener.
@@ -81,3 +84,7 @@ Since I got up way past leaderboard-making time, I decided to skip the quick sol
 ## 11
 
 Straightforward grid problem. Remembered how many grid problems last year were easily solvable with a sparse array as a simple Python dict and, sure enough: this one could be solved that way. Compact code, but *very* inefficient solving (`O(n^2)` per iteration, compared to `O(n)` for a basic grid implementation).
+
+## Etc
+
+Year 2020 turned out to be entertaining, but largely devoid of fun tricks and surprises… → Ended up focussing on crafting tweet-sized solutions, instead of blathering about the (largely straightforward) solving process.
