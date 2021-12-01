@@ -4,3 +4,4 @@ session_cookie.txt
 .DS_Store
 __pycache__
 *.pyc
+debug
