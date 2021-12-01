@@ -1,6 +1,6 @@
-# Advent of code 2020
+# Advent of code 2021
 
-See https://adventofcode.com/2020/about
+See https://adventofcode.com/2021/about
 
 * To run Python code: `python3 -m <DAY>` **from the repo root**
 * *Optional* (if you have Pipenv installed): `pipenv run python3 -m <DAY>`
