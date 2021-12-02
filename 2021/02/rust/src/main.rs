@@ -14,34 +14,21 @@ fn read_file_iter(filename: &str) -> impl Iterator<Item = (char, u32)> {
 }
 
 fn main() {
-    let mut data = read_file_iter("../input.txt");
-
+    let data = read_file_iter("../input.txt");
     let mut horiz = 0;
     let mut depth = 0;
-
-    for (cmd, val) in data {
-        match cmd {
-            'f' => horiz += val,
-            'd' => depth += val,
-            'u' => depth -= val,
-            _ => println!("Unknown command: {}", cmd),
-        }
-    }
-    println!("Part 1: {}", horiz * depth);
-
-    data = read_file_iter("../input.txt");
-    horiz = 0;
-    depth = 0;
     let mut aim = 0;
 
     for (cmd, val) in data {
         match cmd {
-            'f' => { horiz += val; depth += aim*val },
+            'f' => {
+                horiz += val;
+                depth += aim * val
+            }
             'd' => aim += val,
             'u' => aim -= val,
             _ => println!("Unknown command: {}", cmd),
         }
     }
-    println!("Part 2: {}", horiz * depth);
-
+    println!("Part 1: {}\nPart 2: {}", horiz * aim, horiz * depth);
 }
