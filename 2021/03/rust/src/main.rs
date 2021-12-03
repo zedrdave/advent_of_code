@@ -6,7 +6,7 @@ fn read_file(filename: &str) -> Vec<Vec<u8>> {
         .map(|line| {
             line.unwrap()
                 .chars()
-                .map(|c| ((c as u8) - 48))
+                .map(|c| (c as u8 - 48))
                 .collect::<Vec<u8>>()
         })
         .collect::<Vec<Vec<u8>>>()
@@ -15,15 +15,7 @@ fn read_file(filename: &str) -> Vec<Vec<u8>> {
 fn least_most(sums: &Vec<u16>, data_len: u16, least: bool) -> u32 {
     sums.iter()
         .map(|i| i > &(data_len / 2))
-        .rev()
-        .enumerate()
-        .fold(0, |accum, (i, b)| {
-            if b ^ least {
-                accum + u32::pow(2, i as u32)
-            } else {
-                accum
-            }
-        })
+        .fold(0, |accum, b| accum * 2 + (b ^ least) as u32)
 }
 
 fn sieve(data: &Vec<Vec<u8>>, least: bool) -> u32 {
