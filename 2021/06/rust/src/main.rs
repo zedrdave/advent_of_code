@@ -1,4 +1,4 @@
-fn count_fish(init: &Vec<u64>, days: u32) -> u64 {
+fn count_fish_deque(init: &Vec<u64>, days: u32) -> u64 {
     use std::collections::VecDeque;
 
     let mut deq = VecDeque::from(init.clone());
@@ -13,6 +13,21 @@ fn count_fish(init: &Vec<u64>, days: u32) -> u64 {
     deq.iter().sum()
 }
 
+fn count_fish_vec(init: &Vec<u64>, days: u32) -> u64 {
+    let mut fish = init.clone();
+    let mut cur_idx: usize = 0;
+    let l = fish.len();
+    for _ in 0..days {
+        fish[if cur_idx >= 2 {
+            cur_idx - 2
+        } else {
+            l + cur_idx - 2
+        }] += fish[cur_idx];
+        cur_idx = (cur_idx + 1) % l;
+    }
+    fish.iter().sum()
+}
+
 use std::time::Instant;
 
 fn main() {
@@ -24,14 +39,22 @@ fn main() {
         input[d] += 1;
     }
 
-    println!("Part 1: {}", count_fish(&input, 80));
-    println!("Part 2: {}", count_fish(&input, 256));
+    println!("Part 1: {}", count_fish_vec(&input, 80));
+    println!("Part 2: {}", count_fish_vec(&input, 256));
+    assert_eq!(count_fish_deque(&input, 256), count_fish_vec(&input, 256));
 
     // Benchmarking:
     let before = Instant::now();
     let n = 10000;
     for _ in 0..n {
-        count_fish(&input, 256);
+        count_fish_deque(&input, 256);
     }
-    println!("Part 2 took: {:.2?}", before.elapsed() / n);
+    println!("Deque version: {:.2?}", before.elapsed() / n);
+
+    let before = Instant::now();
+    let n = 10000;
+    for _ in 0..n {
+        count_fish_vec(&input, 256);
+    }
+    println!("Vec version: {:.2?}", before.elapsed() / n);
 }
