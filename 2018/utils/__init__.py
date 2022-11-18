@@ -15,11 +15,14 @@ import inspect
 def cmp(a, b): return (a > b) - (a < b)
 
 
-def dl_input(day, sc='session_cookie.txt', year=None):
+def dl_input(day, dest_dir=None, sc='session_cookie.txt', 
+             year=None, overwrite=True):
     """sc - path to file containing session cookie value, or value as string"""
     if year is None:
         year = datetime.datetime.now().year
-
+    if dest_dir is None:
+        dest_dir = f'{day:02}'
+        
     try:
         day = int(day)
     except:
@@ -37,15 +40,20 @@ def dl_input(day, sc='session_cookie.txt', year=None):
     else:
         raise ValueError("session cookie must be provided")
 
-    url = f"https://adventofcode.com/{year}/day/{day}/input"
+    input_dest_file = f'{dest_dir}/input.txt'
+    if overwrite and os.path.exists(input_dest_file):
+        with open(input_dest_file, 'r') as f:
+            txt = f.read()
+        return txt
 
+    url = f"https://adventofcode.com/{year}/day/{day}/input"
     r = requests.get(url, cookies={'session': sc})
 
     if r.status_code == 200:
         txt = r.text.strip()
-        if not os.path.exists(f'{day:02}'):
-            os.mkdir(f'{day:02}')
-        with open(f'{day:02}/input.txt', 'w') as f:
+        if not os.path.exists(dest_dir):
+            os.mkdir(dest_dir)
+        with open(input_dest_file, 'w') as f:
             f.write(txt)
         return txt
     elif r.status_code == 404:
