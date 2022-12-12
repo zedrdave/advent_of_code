@@ -15,7 +15,7 @@ grid[end] = 25
 grid[start] = 0
 
 
-def add(x, d): return (x[0]+d[0], x[1]+d[1])
+add = lambda x, d: (x[0] + d[0], x[1] + d[1])
 
 
 dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
