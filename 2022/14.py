@@ -3,11 +3,6 @@ day = 14
 year = 2022
 data = get_data(day=day, year=year)
 
-rocks = [[list(map(int, c.split(','))) for c in l.split(" -> ")]
-         for l in data.split("\n")]
-rock_set = set(x for l in rocks for s, e in zip(
-    l, l[1:]) for x in r_range(s, e))
-
 
 def r_range(s, e):
     if (s[0] > e[0]) or (s[1] > e[1]):
@@ -16,6 +11,12 @@ def r_range(s, e):
         return [(s[0], i) for i in range(s[1], e[1] + 1)]
     else:
         return [(i, s[1]) for i in range(s[0], e[0] + 1)]
+
+
+rocks = [[list(map(int, c.split(','))) for c in l.split(" -> ")]
+         for l in data.split("\n")]
+rock_set = set(x for l in rocks for s, e in zip(
+    l, l[1:]) for x in r_range(s, e))
 
 
 def print_cave(rock_set, sand_set=set()):
