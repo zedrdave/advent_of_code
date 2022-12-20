@@ -10,8 +10,6 @@ year = 2022
 
 data = get_data(day=day, year=year)
 
-#
-
 
 def explore(minute, stocks, robots, costs, max_minutes):
 
