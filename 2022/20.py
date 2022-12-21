@@ -14,7 +14,7 @@ data = get_data(day=day, year=year)
 def solve(data, rounds, key):
     numbers = [(i, int(n) * key) for i, n in enumerate(data.split("\n"))]
 
-    for r in range(rounds):
+    for _ in range(rounds):
         for i in range(len(numbers)):
             cur_idx = next(cur_idx for cur_idx, (idx, _)
                            in enumerate(numbers) if idx == i)
