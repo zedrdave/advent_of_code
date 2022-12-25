@@ -22,7 +22,7 @@ dims = len(lines[0]) - 2, len(lines) - 2
 all_blizards = [blizards]
 for i in range(1, np.lcm(*dims)):
     new_bliz = defaultdict(set)
-    for (x, y), b_dirs in all_bliz[-1].items():
+    for (x, y), b_dirs in all_blizards[-1].items():
         for dx, dy in b_dirs:
             new_bliz[((x + dx) % dims[0], (y + dy) % dims[1])].add((dx, dy))
     all_blizards.append(new_bliz)
@@ -34,7 +34,7 @@ def shortest_path(all_blizards, dims, start_min, start_pos, end_pos):
     for minute in range(start_min + 1, 10000):
         next_nodes = {(x, y)
                       for x in range(dims[0]) for y in range(dims[1])
-                      if (x, y) not in all_bliz[minute % len(all_bliz)]}
+                      if (x, y) not in all_blizards[minute % len(all_blizards)]}
         next_nodes.add(start_pos)
 
         cur_nodes = {(x + dx, y + dy) for x, y in cur_nodes for dx, dy in dirs
