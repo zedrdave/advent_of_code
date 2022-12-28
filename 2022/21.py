@@ -15,18 +15,25 @@ ops
 
 
 def recur_solve(ops, op):
-    next_ops = ops[op]
-    if len(next_ops) == 1:
-        return int(next_ops[0])
-    vals = [recur_solve(ops, next_ops[0]), recur_solve(ops, next_ops[2])]
-    if next_ops[1] == '+':
-        return vals[0] + vals[1]
-    if next_ops[1] == "-":
-        return vals[0] - vals[1]
-    if next_ops[1] == '*':
-        return vals[0] * vals[1]
-    if next_ops[1] == '/':
-        return vals[0] / vals[1]
+    if len(ops[op]) == 1:
+        return int(ops[op][0])
+    return eval(f"{recur_solve(ops, ops[op][0])} {ops[op][1]} {recur_solve(ops, ops[op][2])}")
+
+
+# def recur_solve(ops, op):
+#     """Safer, faster, without eval"""
+#     next_ops = ops[op]
+#     if len(next_ops) == 1:
+#         return int(next_ops[0])
+#     vals = [recur_solve(ops, next_ops[0]), recur_solve(ops, next_ops[2])]
+#     if next_ops[1] == '+':
+#         return vals[0] + vals[1]
+#     if next_ops[1] == "-":
+#         return vals[0] - vals[1]
+#     if next_ops[1] == '*':
+#         return vals[0] * vals[1]
+#     if next_ops[1] == '/':
+#         return vals[0] / vals[1]
 
 
 print("Part 1:", int(recur_solve(ops, 'root')))
